@@ -16,7 +16,7 @@ print("x3 =" , x3.shape) #x3 = (2, 2
 x4 = np.array([[1,2],[3,4],[5,6]]) # shape = (3,2) 2차원
 print("x4 =" , x4.shape) #x4 = (3, 2)
 
-
+C
 x5 = np.array ([[[1,2],[3,4],[5,6]]]) # shape = (1,3,2) 3차원
 print("x5 =" , x5.shape) #x5 = (1, 3, 2)
 
