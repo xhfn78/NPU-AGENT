@@ -15,7 +15,7 @@ model.add(Dense(1))
 
 #3.컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x,y, epochs=1000)
+model.fit(x,y, epochs=1000, batch_size=6)#데이터 크기가 클때 짤라서 작업하는걸 batch라고함
 
 #4.평가,예측.
 loss = model.evaluate(x, y)

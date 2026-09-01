@@ -1,5 +1,5 @@
-import tensorflow as tf
-print(tf.__version__)
+import tensorflow as tf 
+print(tf.__version__) 
 
 
 from tensorflow.keras.models import Sequential
@@ -18,9 +18,12 @@ model.add(Dense(1, input_dim=1))
 
 #3.컴파일, 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x,y, epochs=10000)
+model.fit(x,y, epochs=100)
 
 
 #4.평가예측
 result = model.predict(np.array([4]))
 print("4의 예측값 : ", result)
+
+
+#결과 4의 예측값 :  [[3.8398268]]  Epoch 100/100
