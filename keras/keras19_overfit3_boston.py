@@ -23,7 +23,7 @@ model.add(Dense(1))
 
 #3.컴파일,훈련
 model.compile(loss='mse', optimizer= 'adam') #mse= 원값에서 예측값 뺴고 나온값을 제곱 > 다 더해서 갯수만큼 엔빵
-hist = model.fit(x_train,y_train, epochs=300, batch_size=16 ,validation_split=0.33)
+hist = model.fit(x_train,y_train, epochs=500, batch_size=16 ,validation_split=0.33)
 
 
 #4.평가,예측
