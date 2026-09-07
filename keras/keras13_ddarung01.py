@@ -8,7 +8,12 @@ import pandas as pd
 
 #1. 데이터
 
-path = "./_data/ddarung/"
+# path = "./_data/ddarung/" #<<< 상대경로
+# path = 'c:/study/_data/ddarung/'  #<<절대경로
+# path = 'c\study\_data\ddarung'  #<<< \ 역슬래쉬로도 사용가능 /s를 인식해서 에러
+# path = 'c://study//_data//ddarung//'  #<<< //두개써도 가능
+path = 'c:\\study\\_data\\ddarung\\'   #<<< \\두개써도 가능
+# path = 'c:\\study\\_data\\ddarung\\'
 
 train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫번째 ID는 Y값 추청에 전혀 영향이 없으니 데이터로 사용하지않게함
 # print(train_csv)
@@ -17,14 +22,6 @@ train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫
 # 0        3    20  ...            33.0   49.0
 # 1        6    13  ...            40.0  159.0
 # 2        7     6  ...            19.0   26.0
-# 3        8    23  ...            64.0   57.0
-# 4        9    18  ...            11.0  431.0
-# ...    ...   ...  ...             ...    ...
-# 1454  2174     4  ...            27.0   21.0
-# 1455  2175     3  ...            19.0   20.0
-# 1456  2176     5  ...            21.0   22.0
-# 1457  2178    21  ...            36.0  216.0
-# 1458  2179    17  ...            17.0  170.0
 
 # [1459 rows x 11 columns]  index_col=0 적용전
 
@@ -33,14 +30,7 @@ train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫
 # 3       20                  16.3  ...            33.0   49.0
 # 6       13                  20.1  ...            40.0  159.0
 # 7        6                  13.9  ...            19.0   26.0
-# 8       23                   8.1  ...            64.0   57.0
-# 9       18                  29.5  ...            11.0  431.0
-# ...    ...                   ...  ...             ...    ...
-# 2174     4                  16.8  ...            27.0   21.0
-# 2175     3                  10.8  ...            19.0   20.0
-# 2176     5                  18.3  ...            21.0   22.0
-# 2178    21                  20.7  ...            36.0  216.0
-# 2179    17                  21.1  ...            17.0  170.0
+
 
 # [1459 rows x 10 columns]  index_col=0 적용후 컬럼 11 >>> 10으로 바뀜
 
@@ -51,15 +41,6 @@ test_csv = pd.read_csv(path + "test.csv", index_col=0)
 # id                                ...                               
 # 0        7                  20.7  ...           44.0            27.0
 # 1       17                  30.0  ...           49.0            36.0
-# 2       13                  19.0  ...           36.0            28.0
-# 4        6                  22.5  ...           52.0            38.0
-# 5       22                  14.6  ...           18.0            15.0
-# ...    ...                   ...  ...            ...             ...
-# 2148     1                  24.6  ...            NaN             NaN
-# 2149     1                  18.1  ...            NaN             NaN
-# 2165     9                  23.3  ...           17.0            15.0
-# 2166    16                  27.0  ...           40.0            26.0
-# 2177     8                  22.3  ...           30.0            24.0
 
 # [715 rows x 9 columns]
 
@@ -70,14 +51,7 @@ submission = pd.read_csv(path + "submission.csv", index_col=0)
 # 0       NaN
 # 1       NaN
 # 2       NaN
-# 4       NaN
-# 5       NaN
-# ...     ...
-# 2148    NaN
-# 2149    NaN
-# 2165    NaN
-# 2166    NaN
-# 2177    NaN
+
 
 # [715 rows x 1 columns]
 
@@ -109,17 +83,17 @@ submission = pd.read_csv(path + "submission.csv", index_col=0)
 ##############################결측치 처리 1.삭제###################################
 
 train_csv = train_csv.dropna() # 결측치(NaN) 있는 ROW 행 삭제후 다시 train.csv에 넣어줌 
-# print(train_csv)   #[1328 rows x 10 columns]
+print(train_csv)   #[1328 rows x 10 columns]
 
 ############################train_cs를 x와 y로 분리##################################
 
 x = train_csv.drop(['count'], axis=1)  #열(컬럼) 삭제  drop(['컬럼명 넣으면됨'])
 
-# print(x)
+print(x)  #[1328 rows x 9 columns]
 
 
 y = train_csv['count']
-# print(y)
+print(y)
 
 x_train,x_test,y_train,y_test = train_test_split(
     x,y,
@@ -142,7 +116,7 @@ model.add(Dense(1))
 #3.컴파일 ,훈련
 
 model.compile(loss = 'mse', optimizer = 'adam')
-model.fit(x,y , epochs= 100 , batch_size=40)
+model.fit(x_train,y_train , epochs= 100 , batch_size=40)
 
 
 #4.평가 ,예측
@@ -150,11 +124,13 @@ model.fit(x,y , epochs= 100 , batch_size=40)
 #4.평가 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
+
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
-print('결과값: ' ,r2)
+print('r2결과값: ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
+print('mse : ', mse)
 
 def RMSE(y_test, y_predict):  #RMSE 함수정의
     return np.sqrt(mean_squared_error(y_test,y_predict))  #np.sqrt하면 mse에 루트가 씌워짐

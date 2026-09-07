@@ -21,7 +21,7 @@ model.compile(loss='mse', optimizer='adam')
 model.fit(x,y, epochs=100)
 
 
-#4.평가예측
+#4.평가,예측
 result = model.predict(np.array([4]))
 print("4의 예측값 : ", result)
 
