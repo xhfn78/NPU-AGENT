@@ -42,7 +42,7 @@ es = EarlyStopping(
     monitor='val_loss',
     mode='min',  #헷갈릴떄는 'auto'쓰기 자동으로 min,max 잡아줌
     patience= 15,  #미니멈값 갱신이안되면 10번더 움직임
-    restore_best_weights=False,  #10번더 움직인값 말고 최적의 값을 반환해줌 #이거 뻇을떄 좀더 잘나올수도있음 FLASE값넣으면!! 
+    restore_best_weights=True,  #10번더 움직인값 말고 최적의 값을 반환해줌 #이거 뻇을떄 좀더 잘나올수도있음 FLASE값넣으면!! 
  )
 
 hist = model.fit(x_train,y_train,
@@ -61,7 +61,6 @@ print("loss:", loss)
 
 y_predict = model.predict(x_test)
 
-y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
 print('r2결과값: ' ,r2)
 
