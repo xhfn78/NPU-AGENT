@@ -17,6 +17,8 @@ test_csv = pd.read_csv(path + 'test.csv', index_col=0 )
 # print(test_csv)
 submission_csv = pd.read_csv(path +'sample_submission.csv',index_col=0)
 
+
+
 # print(train_csv.shape) #(200000, 201)
 # print(test_csv.shape) #(200000, 200)
 # print(submission_csv.shape) #(200000, 1)
@@ -76,13 +78,17 @@ end_time = time.time()  #현재 시간을 반환 ,시작시간
 
 
 #4.평가,예측
-loss = model.evaluate(x_test,y_test)
+loss = model.evaluate(x_test,y_test)#이벨류에이트 할떄는 자체적으로 라운드처리해서 acc가 나옴
 print("loss:", loss)
 print('걸린시간 :',round(end_time - strat_time,2),'초')
 
 y_predict = model.predict(x_test)
+
  #시그모이드 함수를 거쳐 0,1사이 값을 반환후 >>metrics=['acc']로 후처리하면 0 OR 1로 반올림내림해서 퍼센테이지로 변환
 y_predict = np.round(y_predict)# y_pred한 값이 0.11121515,0.125148이런식으로 나와서 라운드처리후  [1.] 이런식으로 변환한다음에 acc값 비교 이거 안하면 에러남
+#지표를 판단하기 위해서 model.predict값은 0,1로 나오지않기 때문에 라운드 처리해줘서 소수점을 제거함
+
+
 acc_score = accuracy_score(y_test,y_predict,normalize=True)
 print('acc_score:', acc_score)  #acc_score: 0.9298245614035088
 
