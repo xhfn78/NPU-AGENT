@@ -19,6 +19,11 @@ x_train,x_test,y_train,y_test = train_test_split(
     train_size=0.75, 
 
 )
+from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
+scaler = MinMaxScaler()
+scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
+x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_test = scaler.transform(x_test) 
 
 #2.모델구성
 model = Sequential()
@@ -128,4 +133,17 @@ loss: 2637.873291015625
 r2결과값:  0.5483979249211794
 mse :  2637.8732195134085
 RMSE :  51.36022994023107
+"""
+
+"""
+2차시도 --- MINMAX 적용
+random : 221
+train_size = 0.75
+epochs = 30000
+batch_size = 10
+결과
+loss: 2574.98388671875
+r2결과값:  0.5591645248939214
+mse :  2574.983947518029
+RMSE :  50.744299655409854
 """
