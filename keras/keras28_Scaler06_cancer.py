@@ -55,10 +55,31 @@ x_train,x_test,y_train,y_test =train_test_split(
     train_size=0.8,
     stratify=y,  #x,y데이터를 나눌떄 stratify=y이걸안넣으면 x,y서로 데이터 크기가 달랐을떄 비율편차가 생길수있음
 )
-from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
-scaler = MinMaxScaler()
+from sklearn.preprocessing import MinMaxScaler,StandardScaler ,MaxAbsScaler
+from sklearn.preprocessing import RobustScaler
+##############################################################################
+# scaler = MinMaxScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = StandardScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = MaxAbsScaler()
+##############################################################################
+
+
+##############################################################################
+scaler = RobustScaler()
+##############################################################################
+
 scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
 x_test = scaler.transform(x_test) 
 
 # print(np.unique(y_train,return_counts=True))
@@ -110,8 +131,6 @@ print('acc:',round(loss[1],4)) #loss: 0번[0.12450382113456726,###LOSS값 (1번)
 print('==============================')
 y_pred = model.predict(x_test)  #시그모이드 함수를 거쳐 0,1사이 값을 반환후 >>metrics=['acc']로 후처리하면 0 OR 1로 반올림내림해서 퍼센테이지로 변환
 y_pred = np.round(y_pred)# y_pred한 값이 0.11121515,0.125148이런식으로 나와서 라운드처리후  [1.] 이런식으로 변환한다음에 acc값 비교 이거 안하면 에러남
-print(y_pred[:10])
-# print(y_pred[:10])
 from sklearn.metrics import accuracy_score
 
 acc_score = accuracy_score(y_test,y_pred,normalize=True)
@@ -124,9 +143,26 @@ print('acc_score:', acc_score)  #acc_score: 0.9298245614035088
 '''
 
 '''
-#2차시도
+#2차시도  
 # ==============================
 # loss: 0.04621350020170212
 # acc: 1.0
 # ==============================
+'''
+'''
+#3차시도--standard-
+==============================
+loss: 0.07651437073945999
+acc: 0.9649
+acc_score: 0.9649122807017544
+==============================
+'''
+
+'''
+#4차시도--maxabsscaler-
+==============================
+loss: 0.04820290952920914
+acc: 0.9912
+==============================
+acc_score: 0.9912280701754386
 '''

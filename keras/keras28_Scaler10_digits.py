@@ -31,10 +31,30 @@ x_train,x_test,y_train,y_test =train_test_split(
     train_size=0.8,
     stratify=y,  #x,y데이터를 나눌떄 stratify=y이걸안넣으면 x,y서로 데이터 크기가 달랐을떄 비율편차가 생길수있음
 )
-from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
-scaler = MinMaxScaler()
+from sklearn.preprocessing import MinMaxScaler,StandardScaler,MaxAbsScaler 
+from sklearn.preprocessing import RobustScaler
+##############################################################################
+# scaler = MinMaxScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = StandardScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = MaxAbsScaler()
+##############################################################################
+
+
+##############################################################################
+scaler = RobustScaler()
+##############################################################################
 scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
 x_test = scaler.transform(x_test) 
 
 #2.모델구성
@@ -114,4 +134,15 @@ acc_score : 0.9555555555555556
 # 12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 
 # acc_score : 0.9666666666666667
 # 걸린시간:  17.67 초
+'''
+
+
+'''
+# 5차시도--standard-
+loss:  0.09308037161827087
+acc:  0.97
+12/12 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 
+acc_score : 0.9666666666666667
+걸린시간:  15.6 초
+
 '''

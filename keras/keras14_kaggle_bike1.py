@@ -28,29 +28,6 @@ submission = pd.read_csv(path +'sampleSubmission.csv',index_col=0)
 # print(train_csv.isna().sum())
 # print(test_csv.isnull().sum())
 
-# season        0            
-# holiday       0
-# workingday    0
-# weather       0
-# temp          0
-# atemp         0
-# humidity      0
-# windspeed     0
-# casual        0
-# registered    0
-# count         0
-# dtype: int64
-
-
-# season        0
-# holiday       0
-# workingday    0
-# weather       0
-# temp          0
-# atemp         0
-# humidity      0
-# windspeed     0
-# dtype: int64
 
 ################# x,y 분리 ##########################
 x = train_csv.drop(['casual','registered', 'count'], axis=1)

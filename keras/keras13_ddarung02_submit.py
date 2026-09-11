@@ -24,36 +24,13 @@ x_train,x_test,y_train,y_test = train_test_split(
 
 #####################submit 작업 ################################
 # print(test_csv.info())
-# print(test_csv.shape) 
 
-#  #   Column                  Non-Null Count  Dtype  
-# ---  ------                  --------------  -----  
-#  0   hour                    715 non-null    int64  
-#  1   hour_bef_temperature    714 non-null    float64
-#  2   hour_bef_precipitation  714 non-null    float64
-#  3   hour_bef_windspeed      714 non-null    float64
-#  4   hour_bef_humidity       714 non-null    float64
-#  5   hour_bef_visibility     714 non-null    float64
-#  6   hour_bef_ozone          680 non-null    float64
-#  7   hour_bef_pm10           678 non-null    float64
-#  8   hour_bef_pm2.5          679 non-null    float64
 
 ######################결측치 처리 2.평균값 넣기 ####################
 test_csv = test_csv.fillna(test_csv.mean())   ##
 # print(test_csv.info()) #(715, 9)
 # print(test_csv.shape) #(715, 9)
 
-#  #   Column                  Non-Null Count  Dtype  
-# ---  ------                  --------------  -----  
-#  0   hour                    715 non-null    int64  
-#  1   hour_bef_temperature    715 non-null    float64
-#  2   hour_bef_precipitation  715 non-null    float64
-#  3   hour_bef_windspeed      715 non-null    float64
-#  4   hour_bef_humidity       715 non-null    float64
-#  5   hour_bef_visibility     715 non-null    float64
-#  6   hour_bef_ozone          715 non-null    float64
-#  7   hour_bef_pm10           715 non-null    float64
-#  8   hour_bef_pm2.5          715 non-null    float64
 
 
 
@@ -104,14 +81,7 @@ print('RMSE : ', rmse)
 # 0       NaN
 # 1       NaN
 # 2       NaN
-# 4       NaN
-# 5       NaN
-# ...     ...
-# 2148    NaN
-# 2149    NaN
-# 2165    NaN
-# 2166    NaN
-# 2177    NaN
+
 
 y_submit = model.predict(test_csv)
 submission['count'] = y_submit
@@ -122,15 +92,7 @@ submission['count'] = y_submit
 # id             
 # 0     -6.693819
 # 1    -41.792511
-# 2     46.420265
-# 4    -11.514208
-# 5     33.518692
-# ...         ...
-# 2148 -52.424133
-# 2149 -70.276520
-# 2165 -61.512573
-# 2166 -67.324860
-# 2177 -27.253237
+
 
 # [715 rows x 1 columns]
 # (715, 1)

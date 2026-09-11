@@ -11,10 +11,32 @@ from sklearn.metrics import r2_score,mean_squared_error
 print(x_train.shape, x_test.shape) #(404, 13) (102, 13)
 print(y_train.shape, y_test.shape) #(404,) (102,)
 
-from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
-scaler = MinMaxScaler()
+
+from sklearn.preprocessing import MinMaxScaler,StandardScaler,MaxAbsScaler  #preprocessing(전처리)
+from sklearn.preprocessing import RobustScaler
+
+##############################################################################
+# scaler = MinMaxScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = StandardScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = MaxAbsScaler()
+##############################################################################
+
+
+##############################################################################
+scaler = RobustScaler()
+##############################################################################
 scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
 x_test = scaler.transform(x_test) 
 
 #2.모델구성
@@ -105,3 +127,19 @@ r2결과값:  0.5591645248939214
 mse :  2574.983947518029
 RMSE :  50.744299655409854
 """
+#StandardScaler
+"""
+3차시도 --- standard 적용
+loss: 24.623424530029297
+r2:  0.7042012453817736
+RMSE :  4.962199786564942
+
+"""
+
+#maxabsscaler
+'''
+4차시도 --- standard 적용
+loss: 24.623424530029297
+r2:  0.7115445227425319
+RMSE :  4.900218776088198
+'''

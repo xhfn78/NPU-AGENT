@@ -64,10 +64,31 @@ x_train,x_test, y_train, y_test = train_test_split(x,y,
                  random_state=999,
 
                  )
-from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
-scaler = MinMaxScaler()
+from sklearn.preprocessing import MinMaxScaler,StandardScaler,MaxAbsScaler 
+from sklearn.preprocessing import RobustScaler
+##############################################################################
+# scaler = MinMaxScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = StandardScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = MaxAbsScaler()
+##############################################################################
+
+
+##############################################################################
+scaler = RobustScaler()
+##############################################################################
+
 scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
 x_test = scaler.transform(x_test) 
 
 
@@ -156,7 +177,7 @@ r2 :0.24
 
 """
 2차시도 ---ㅡMINMAX적용
-random : 333
+random : 999
 train_size = 0.75
 epochs = 200
 batch_size = 1000
@@ -165,3 +186,26 @@ r2결과값:  0.31419837474823
 mse :  21730.66796875
 RMSE :  147.4132557429962
 """
+'''
+3차시도 ---ㅡstandard적용
+random : 999
+train_size = 0.75
+epochs = 200
+batch_size = 1000
+결과
+r2결과값:  0.3204250931739807
+mse :  21533.3671875
+RMSE :  146.74252003935328
+'''
+
+'''
+4차시도 ---ㅡmaxabsscaler적용
+random : 999
+train_size = 0.75
+epochs = 200
+batch_size = 1000
+결과
+r2결과값:  0.31977593898773193
+mse :  21553.935546875
+RMSE :  146.81258647294175
+'''
