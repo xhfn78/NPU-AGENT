@@ -28,12 +28,33 @@ x_train,x_test,y_train,y_test = train_test_split(
     shuffle=True,
     stratify=y,
     )
-from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
-scaler = MinMaxScaler()
+from sklearn.preprocessing import MinMaxScaler,StandardScaler,MaxAbsScaler 
+from sklearn.preprocessing import RobustScaler
+##############################################################################
+# scaler = MinMaxScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = StandardScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = MaxAbsScaler()
+##############################################################################
+
+
+##############################################################################
+scaler = RobustScaler()
+##############################################################################
+
 scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
 x_test = scaler.transform(x_test) 
-# acc= 0.95
+
 
 #2.모델구성
 model = Sequential()
@@ -93,6 +114,8 @@ print('걸린시간: ', round(end_time-start_time, 2),'초')
 # 걸린시간:  14.58 초
 '''
 
+
+#MinMaxScaler
 '''
 loss:  0.16965200006961823
 acc:  0.94
@@ -100,3 +123,24 @@ acc:  0.94
 acc_score : 0.9444444444444444
 걸린시간:  8.62 초
 '''
+
+
+#StandardScaler
+'''
+loss:  0.11229284852743149
+acc:  0.97
+2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 35ms/step
+acc_score : 0.9722222222222222
+걸린시간:  4.44 초
+'''
+
+##maxabs
+'''
+loss:  0.18491190671920776
+acc:  0.97
+2/2 ━━━━━━━━━━━━━━━━━━━━ 0s 41ms/step
+acc_score : 0.9722222222222222
+걸린시간:  19.49 초
+'''
+
+

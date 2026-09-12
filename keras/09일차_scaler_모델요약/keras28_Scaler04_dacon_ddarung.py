@@ -20,10 +20,30 @@ x_train,x_test,y_train,y_test = train_test_split(
     train_size=0.8,
     random_state=666,
 )
-from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
-scaler = MinMaxScaler()
+from sklearn.preprocessing import MinMaxScaler,StandardScaler,MaxAbsScaler
+from sklearn.preprocessing import RobustScaler
+##############################################################################
+# scaler = MinMaxScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = StandardScaler()
+##############################################################################
+
+
+
+##############################################################################
+# scaler = MaxAbsScaler()
+##############################################################################
+
+
+##############################################################################
+scaler = RobustScaler()
+##############################################################################
 scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
 x_test = scaler.transform(x_test) 
 
 
@@ -38,7 +58,7 @@ x_test = scaler.transform(x_test)
 
 
 ######################결측치 처리 2.평균값 넣기 ####################
-test_csv = test_csv.fillna(test_csv.mean())   ##
+# test_csv = test_csv.fillna(test_csv.mean())   ##
 # print(test_csv.info()) #(715, 9)
 # print(test_csv.shape) #(715, 9)
 
@@ -153,7 +173,7 @@ r2 :0.59
 
 
 """
-2차시도----minmax 적용후
+2차시도----standardscaler 적용후
 random : 666
 train_size = 0.75
 epochs = 500
@@ -164,4 +184,28 @@ r2결과값:  0.5922229895570417
 mse :  2463.9010092448575
 RMSE :  49.637697461152015
 """
+"""
+3차시도----maxabsscaler 적용후
+random : 666
+train_size = 0.75
+epochs = 500
+batch_size = 3
+결과
+loss: 2448.281005859375
+r2결과값:  0.5948081059722305
+mse :  2448.28102385755
+RMSE :  49.48010735495175
+"""
 
+'''
+4차시도----robust 적용후
+random : 666
+train_size = 0.75
+epochs = 500
+batch_size = 3
+결과
+loss: 2506.461181640625
+r2결과값:  0.5851792571021095
+mse :  2506.461180760426
+RMSE :  50.06457011460726
+'''

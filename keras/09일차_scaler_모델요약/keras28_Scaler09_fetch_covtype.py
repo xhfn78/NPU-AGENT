@@ -42,12 +42,27 @@ x_train,x_test,y_train,y_test = train_test_split(
     shuffle=True,
     stratify=y,
     )
-from sklearn.preprocessing import MinMaxScaler  #preprocessing(전처리)
-scaler = MinMaxScaler()
+from sklearn.preprocessing import MinMaxScaler,StandardScaler,MaxAbsScaler
+from sklearn.preprocessing import RobustScaler
+##############################################################################
+# scaler = MinMaxScaler()
+##############################################################################
+
+##############################################################################
+# scaler = StandardScaler()
+##############################################################################
+
+##############################################################################
+# scaler = MaxAbsScaler()
+##############################################################################
+
+##############################################################################
+scaler = RobustScaler()
+##############################################################################
 scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.transform(x_train) # 0~1 값 변환 사이로변환
+x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
 x_test = scaler.transform(x_test) 
-# exit()
+
 
 #2.모델구성
 model = Sequential()
@@ -66,7 +81,7 @@ model.compile(loss = 'categorical_crossentropy',
 es = EarlyStopping(
     monitor= 'val_loss',
     mode= 'auto',
-    patience=100,
+    patience=50,
     restore_best_weights=True,
 )
 start_time =time.time()
@@ -85,7 +100,7 @@ y_predict= model.predict(x_test)
 y_predict = np.argmax(y_predict,axis=1) 
 print(y_predict)#[0 2 0 1 1 2 0 2 0 2 2 1 2 0 0 0 2 0 2 1 0 2 1 1 0 2 1 1 1 2]
 y_test = np.argmax(y_test, axis=1)
-print(y_test) #[0 2 0 1 1 1 0 2 0 2 2 2 2 0 0 0 2 0 2 1 0 2 1 1 0 2 1 1 1 1]
+# print(y_test) #[0 2 0 1 1 1 0 2 0 2 2 2 2 0 0 0 2 0 2 1 0 2 1 1 0 2 1 1 1 1]
 # #######################################################
 # y_predict = np.argmax(model.predict(x_test),axis =1)
 # y_test_argmax =np.argmax(y_test,axis=1)
@@ -107,3 +122,22 @@ acc:  0.94
 acc_score : 0.9417684046263999
 걸린시간:  1428.33 초
 '''
+'''
+2차시도 standard-scaler
+loss:  0.1539806574583053
+acc:  0.94
+5447/5447 ━━━━━━━━━━━━━━━━━━━━ 3s 610us/step 
+acc_score : 0.945250826142831
+걸린시간:  455.52 초
+'''
+'''
+3차시도 -maxabs-scaler
+loss:  0.17319022119045258
+acc:  0.94
+5447/5447 ━━━━━━━━━━━━━━━━━━━━ 3s 577us/step 
+[1 1 5 ... 1 1 0]
+acc_score : 0.9378557003855333
+걸린시간:  2283.56 초
+
+'''
+
