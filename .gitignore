@@ -1,3 +1,4 @@
 *.csv
 .vscode
 ._data
+._save

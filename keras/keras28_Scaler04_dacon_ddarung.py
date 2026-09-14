@@ -59,6 +59,8 @@ x_test = scaler.transform(x_test)
 
 ######################결측치 처리 2.평균값 넣기 ####################
 # test_csv = test_csv.fillna(test_csv.mean())   ##
+test_csv = test_csv.fillna(test_csv.mean())
+test_csv = scaler.transform(test_csv)
 # print(test_csv.info()) #(715, 9)
 # print(test_csv.shape) #(715, 9)
 
@@ -82,7 +84,14 @@ model.add(Dense(1))
 #3.컴파일 ,훈련
 
 model.compile(loss = 'mse', optimizer = 'adam')
-hist = model.fit(x_train,y_train , epochs= 500 , batch_size=32,validation_split=0.2)
+from tensorflow.keras.callbacks import EarlyStopping
+es = EarlyStopping(
+    monitor='val_loss',
+    mode='auto',
+    patience=20,
+    restore_best_weights=True,
+)
+hist = model.fit(x_train,y_train , epochs= 500 , batch_size=32,validation_split=0.2, callbacks=[es])
 
 #4.평가 예측
 loss = model.evaluate(x_test,y_test)

@@ -3,6 +3,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split 
 import numpy as np
+from sklearn.metrics import r2_score,mean_squared_error
 
 #1.데이터
 
@@ -36,6 +37,19 @@ print("=========================================")
 #4.평가 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
+
+y_predict = model.predict(x_test)
+r2 = r2_score(y_test, y_predict)
+print('r2결과값: ' ,r2)
+
+mse = mean_squared_error(y_test,y_predict)
+print('mse : ', mse)
+
+def RMSE(y_test, y_predict):  #RMSE 함수정의
+    return np.sqrt(mean_squared_error(y_test,y_predict))
+
+rmse = RMSE(y_test, y_predict)
+print('RMSE : ', rmse)
 # results = model.predict(x)
 # print('결과값: ' ,results)
 #랜덤 442
