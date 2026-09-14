@@ -1,3 +1,9 @@
+# [실습] 모델 불러오기 1 - 훈련 전에 저장한 모델 불러오기
+#
+# load_model(경로) 로 불러오면 model = Sequential() ... 부분을 다시 쓰지 않아도 된다.
+# 구조와 가중치가 통째로 복원되기 때문이다.
+# 다만 keras29_1은 훈련 전에 저장한 것이라 가중치가 랜덤 초기값이다.
+# 그래서 불러온 뒤 다시 훈련시켜야 쓸모가 있다.
 #29-2 카피
 
 # import ssl
@@ -11,7 +17,7 @@ import numpy as np
 import time
 
 
-#1.데이터 
+#1. 데이터
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
@@ -45,7 +51,7 @@ x_train = scaler.fit_transform(x_train)
 ##############################################################################
 x_test = scaler.transform(x_test) 
 
-#2.모델구성
+#2. 모델구성
 # model = Sequential()
 # model.add(Dense(9, input_dim=8,activation='relu'))
 # model.add(Dense(9,activation='relu'))
@@ -57,15 +63,16 @@ x_test = scaler.transform(x_test)
 # model.summary()
 
 path = './_save/keras29/'  
-# model.save(path + 'keras29_1_save_model.keras') #가중치 세이브
+# model.save(path + 'keras29_1_save_model.keras') #모델 구조 + 가중치 통째로 저장
 
 model = load_model(path + 'keras29_1_save_model.keras') #저장된 모델 불러오기
 model.summary()
-# exit()
+# exit()   # 여기서 프로그램을 끝낸다. 훈련 전 저장이 목적이라 아래 훈련 코드는 실행하지 않는다.
+         # 훈련까지 해보려면 이 줄을 주석 처리하면 된다.
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환 ,시작시간
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(
     monitor='val_loss',
@@ -76,13 +83,13 @@ es = EarlyStopping(
 hist = model.fit(x_train,y_train, epochs=300, batch_size=64  ,validation_split=0.2, callbacks=[es])
 end_time = time.time()  #훈련 끝난 시간을 반환 , 끝시간
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)

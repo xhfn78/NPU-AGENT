@@ -32,7 +32,7 @@ x_train,x_test,y_train,y_test =train_test_split(
     stratify=y,  #x,y데이터를 나눌떄 stratify=y이걸안넣으면 x,y서로 데이터 크기가 달랐을떄 비율편차가 생길수있음
 )
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(30, input_dim=64, activation= 'relu'))
 model.add(Dense(50, activation= 'relu'))
@@ -41,7 +41,7 @@ model.add(Dense(50, activation= 'relu'))
 model.add(Dense(30, activation= 'relu'))
 model.add(Dense(10,activation='softmax'))
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss = 'categorical_crossentropy',
               optimizer = 'adam',
               metrics =['acc']
@@ -77,9 +77,10 @@ y_test = np.argmax(y_test, axis=1)
 # print(y_predict)
 
 
-accuracy_score =accuracy_score(y_test,y_predict)  
+# 주의: 함수 이름을 변수로 덮어쓰지 않도록 acc_score로 받는다.
+acc_score = accuracy_score(y_test,y_predict)  
 #지금까지는 y_predict 값은 [0.7,0.2,0.1]이런식으로 되어있어서 비교가 불가능함 >>가장큰 수를 1로 바꿔줘야함 그래서 결과를 [1,0,0]으로 변경후 비교 
-print('acc_score :',accuracy_score)
+print('acc_score :',acc_score)
 print('걸린시간: ', round(end_time-start_time, 2),'초')
 
 #acc : 1.0

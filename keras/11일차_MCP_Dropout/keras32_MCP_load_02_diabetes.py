@@ -1,3 +1,7 @@
+# [실습] ModelCheckpoint 불러오기 - 당뇨병 (회귀)
+#
+# keras31_MCP_save_02 가 저장해둔 체크포인트를 불러와서 평가만 한다.
+# 먼저 keras31_MCP_save_02 를 실행해서 저장 파일을 만들어야 동작한다.
 from sklearn.datasets import fetch_california_housing, load_diabetes #캘리포니아 집값 데이터셋,로드 디아벳
 from tensorflow.keras.models import Sequential,load_model
 from tensorflow.keras.layers import Dense
@@ -9,7 +13,7 @@ from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
 path = './_save/keras30/' 
 
 
-#1.데이터
+#1. 데이터
 
 datasets = load_diabetes()
 x = datasets.data
@@ -37,17 +41,17 @@ x_test = scaler.transform(x_test)
 model = load_model(path + 'k30_0914_1428-0100-2584.6528.keras')
 
 
-#4.평가,예측
+#4. 평가, 예측
 print("=========================================")
 
-#4.평가 예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)                                                                                                                                  
 
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)

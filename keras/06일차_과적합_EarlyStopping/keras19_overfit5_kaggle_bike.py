@@ -67,7 +67,7 @@ x_train,x_test, y_train, y_test = train_test_split(x,y,
 
 
 
-#2.모델구성
+#2. 모델구성
 
 model = Sequential()
 model.add(Dense(10, activation='relu', input_dim=8))
@@ -78,19 +78,17 @@ model.add(Dense(10,activation='relu'))
 model.add(Dense(1,activation='relu'))
 
 
-#3.컴파일 훈련
+#3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer= 'adam' )
 hist = model.fit(x_train,y_train, epochs = 2000, batch_size=200, validation_split=0.33)
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
-
-y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
@@ -109,7 +107,9 @@ submission.to_csv(path + 'submit/' + 'submit_0904_3.csv')
 
 
 import matplotlib.pyplot as plt
-plt.rc('font', family='Malgun Gothic')  #맑은 고딕 폰트 적용 한글꺠짐 방지
+import platform
+# 한글 깨짐 방지. 윈도우는 맑은 고딕, 맥은 AppleGothic을 써야 한다.
+plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')
 plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자나올떄 깨짐방지
 plt.figure(figsize=(9,6))
 plt.plot(hist.history['loss'][2:] ,c='red', label='loss') #y값만 넣으면 시간순으로 그려줌.
@@ -125,7 +125,7 @@ plt.show()
 
 '''
 하이퍼 파라미터 튜닝
-#1.데이터 부분
+#1. 데이터부분
 random_state
 train_size
 #2.

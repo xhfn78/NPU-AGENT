@@ -1,4 +1,8 @@
-#https://www.kaggle.com/competitions/santander-customer-transaction-prediction/data
+# [실습] 이진 분류 - 산탄데르 고객 거래 예측 (캐글)
+# https://www.kaggle.com/competitions/santander-customer-transaction-prediction/data
+#
+# keras21(유방암)과 구조는 똑같은 이진 분류지만 규모가 다르다.
+# 행 200,000개 / feature 200개.
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
@@ -9,8 +13,8 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.metrics import accuracy_score
 
 #1. 데이터
-# path = './_data/kaggle_santander/'
-path = 'c://study//_data//kaggle_santander//'
+path = './_data/kaggle_santander/'   #<<< 상대경로 (윈도우/맥 어디서나 동작)
+# path = 'c://study//_data//kaggle_santander//'   #<<< 윈도우 절대경로. // 두 개 써도 가능하지만 맥에서는 안 됨
 train_csv = pd.read_csv(path + 'train.csv', index_col=0)
 # print(train_csv)
 test_csv = pd.read_csv(path + 'test.csv', index_col=0 )
@@ -37,7 +41,12 @@ y = train_csv['target']
 print(y)
 print(np.unique(y,return_counts=True)) 
  #(array([0, 1]), array([179902,  20098]))
-exit()
+# 0이 179,902개, 1이 20,098개로 약 9:1이다. 이렇게 한쪽으로 쏠린 걸 불균형 데이터라고 한다.
+# 전부 0이라고만 찍어도 accuracy가 90%가 나오기 때문에,
+# 이런 데이터에서는 accuracy만 보고 잘한다고 판단하면 안 된다.
+# stratify=y가 특히 중요해지는 이유이기도 하다.
+
+# exit()   # 여기서 멈추고 데이터만 확인하려고 썼던 줄. 켜두면 아래가 실행되지 않는다.
 
 x_train,x_test,y_train,y_test =train_test_split(
     x,y,
@@ -46,7 +55,7 @@ x_train,x_test,y_train,y_test =train_test_split(
     stratify=y,  #x,y데이터를 나눌떄 stratify=y이걸안넣으면 x,y서로 데이터 크기가 달랐을떄 비율편차가 생길수있음
 )
 
-# #2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(50, input_dim=200, activation= 'relu'))
 model.add(Dense(80, activation= 'relu'))
@@ -62,27 +71,27 @@ model.add(Dense(1,activation= 'sigmoid'))
 model.compile(loss ='binary_crossentropy',
                 optimizer= 'adam',
                 metrics=['acc'],        
-            )  #이진분류에서는 loss = 'binary_crossetropy' 고정
+            )  #이진분류에서는 loss = 'binary_crossentropy' 고정
 es = EarlyStopping(
             monitor='val_loss',
             mode= 'auto',
             patience=300,
             restore_best_weights=True,
             )
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환, 시작시간
 hist = model.fit(x_train,y_train,
            epochs=3000 , 
            batch_size=2000,
            validation_split=0.2,
            callbacks =[es], 
            )
-end_time = time.time()  #현재 시간을 반환 ,시작시간
+end_time = time.time()  #훈련 끝난 시간을 반환, 끝시간
 
 
-#4.평가,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)#이벨류에이트 할떄는 자체적으로 라운드처리해서 acc가 나옴
 print("loss:", loss)
-print('걸린시간 :',round(end_time - strat_time,2),'초')
+print('걸린시간 :',round(end_time - start_time,2),'초')
 
 y_predict = model.predict(x_test)
 

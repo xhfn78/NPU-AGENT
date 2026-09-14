@@ -1,3 +1,4 @@
+# [실습] 캘리포니아 주택 가격 데이터셋 - validation 적용하기
 # import ssl
 # ssl._create_default_https_context = ssl.create_default_context 다운로드 안될떄 사용할것
 
@@ -8,7 +9,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn.metrics import r2_score,mean_squared_error
 
-#1.데이터 
+#1. 데이터
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
@@ -20,7 +21,7 @@ x_train,x_test,y_train,y_test = train_test_split(
 
 print(x.shape,y.shape) #(20640, 8) (20640,)
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(9, input_dim=8))
 model.add(Dense(9))
@@ -31,15 +32,17 @@ model.add(Dense(1))
 
 
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
 model.fit(x_train,y_train, epochs=200, batch_size=16  ,validation_split=0.33)
+          # validation_split=0.33 은 x_train의 33%를 검증용으로 떼어간다는 뜻이다.
+          # 그만큼 실제 훈련에 쓰는 데이터는 줄어들지만,
+          # 훈련이 진행되는 동안 val_loss로 과적합 여부를 지켜볼 수 있게 된다.
 
 
-#4.평가,예측
+#4. 평가, 예측
 print("=========================================")
 
-#4.평가 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 results = model.predict(x)
@@ -47,7 +50,7 @@ print('결과값: ' ,results)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)

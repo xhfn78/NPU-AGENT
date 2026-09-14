@@ -9,7 +9,7 @@ import numpy as np
 from sklearn.metrics import r2_score , mean_squared_error
 
 
-#1.데이터 
+#1. 데이터
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
@@ -21,9 +21,9 @@ x_train,x_test,y_train,y_test = train_test_split(
 
 print(x.shape,y.shape) #(20640, 8) (20640,)
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
-model.add(Dense(7, input_dim=8))
+model.add(Dense(7, input_dim=8))  # feature가 8개이므로 input_dim=8
 model.add(Dense(9))
 model.add(Dense(7))
 model.add(Dense(5))
@@ -31,19 +31,22 @@ model.add(Dense(1))
 
 
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
 model.fit(x_train,y_train, epochs=200, batch_size=60  )
 
 
 print("=========================================")
-#4.평가 예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 y_predict = model.predict(x_test)
 print("=========================================")
 print("loss:", loss)
+# loss(mse) 하나만으로는 잘 맞힌 건지 알기 어렵다.
+# R2는 0~1 사이라 데이터가 달라도 서로 비교할 수 있고,
+# RMSE는 mse에 루트를 씌워 단위를 원래 y와 같게 맞춘 값이다.
 r2 = r2_score(y_test, y_predict)
-print('결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)

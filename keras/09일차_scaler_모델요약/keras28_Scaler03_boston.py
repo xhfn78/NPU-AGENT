@@ -1,3 +1,8 @@
+# [실습] Scaler 4종 비교 - 보스턴 주택 가격 (회귀)
+#
+# keras27과 달라진 점: 스케일러를 x_train에만 fit한다.
+# MinMax / Standard / MaxAbs / Robust 중 하나만 주석을 풀어서 쓰고,
+# 결과가 어떻게 달라지는지 아래 기록과 비교해본다.
 #11_3 COPY
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -6,7 +11,7 @@ import numpy as np
 from sklearn.metrics import r2_score,mean_squared_error
 
 
-#1.데이터
+#1. 데이터
 (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
 print(x_train.shape, x_test.shape) #(404, 13) (102, 13)
 print(y_train.shape, y_test.shape) #(404,) (102,)
@@ -18,28 +23,51 @@ from sklearn.preprocessing import RobustScaler
 ##############################################################################
 # scaler = MinMaxScaler()
 ##############################################################################
+# MinMaxScaler
+#   X_scaled = (X - X_min) / (X_max - X_min)
+#   fit한 데이터의 최솟값을 0, 최댓값을 1로 만든다.
+#   단점: 이상치가 하나라도 있으면 Min/Max 자체가 그 이상치로 잡혀서 크게 흔들린다.
 
 
 
 ##############################################################################
 # scaler = StandardScaler()
 ##############################################################################
+# StandardScaler
+#   z = (x - 평균) / 표준편차
+#   평균을 0, 표준편차를 1로 만든다.
+#   z = 1 은 "평균보다 표준편차 1개만큼 위"라는 뜻이고, z = -2 는 "평균보다 2개만큼 아래"라는 뜻이다.
+#   단점: 평균과 표준편차도 이상치의 영향을 받는다.
 
 
 
 ##############################################################################
 # scaler = MaxAbsScaler()
 ##############################################################################
+# MaxAbsScaler
+#   X_scaled = X / max(|X|)
+#   그 feature의 최대 절댓값으로 나눈다. 예) [-50, 0, 100] → [-0.5, 0, 1.0]
+#   주의: 최솟값이 항상 -1이 되는 게 아니라, 절댓값이 가장 큰 값만 ±1이 된다.
+#   단점: 최대 절댓값을 기준으로 삼기 때문에 큰 이상치에 민감하다.
 
 
 ##############################################################################
 scaler = RobustScaler()
 ##############################################################################
-scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
-x_test = scaler.transform(x_test) 
+# 이상치에 강력함
+# RobustScaler
+#   X_scaled = (X - 중앙값) / IQR       (IQR = 3사분위수 - 1사분위수)
+#   중심을 평균 대신 중앙값으로, 폭을 표준편차 대신 IQR로 잡는다.
+#   중앙값과 IQR은 이상치 하나에 잘 흔들리지 않아서 이상치에 강하다.
+#   단, 이상치를 제거하는 게 아니라 이상치 때문에 스케일링 기준이 왜곡되는 걸 줄이는 것이다.
+# scaler.fit(x_train)   # fit만 하는 줄. 아래에서 fit_transform으로 한 번에 하므로 중복이라 꺼둔다.
+# [ 스케일러는 x_train에만 fit한다 ]
+#   x_test와 실전 데이터는 x_train에서 학습한 기준으로 transform만 해야 한다.
+#   test 데이터의 정보가 스케일러에 미리 반영되면 평가를 믿을 수 없게 되기 때문이다.
+x_train = scaler.fit_transform(x_train)   # x_train 기준을 학습(fit)하고 동시에 변환(transform)
+x_test = scaler.transform(x_test)         # test는 transform만 (fit 금지)
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(3, input_dim=13))
 model.add(Dense(5))
@@ -49,7 +77,7 @@ model.add(Dense(1))
 
 
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam') #mse= 원값에서 예측값 뺴고 나온값을 제곱 > 다 더해서 갯수만큼 엔빵
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(
@@ -66,10 +94,8 @@ hist = model.fit(x_train,y_train,
                  )
 
 
-#4.평가,예측
+#4. 평가, 예측
 print("=========================================")
-
-#4.평가 예측
 
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
@@ -96,7 +122,8 @@ print('RMSE : ', rmse)
 # r2:  0.6793436562860996
 # RMSE :  5.166494759799227  #25가 나온값을 루트 쓰위서 제곱 이전으로 돌리면 5
 # import matplotlib.pyplot as plt
-# plt.rc('font', family='Malgun Gothic')  #맑은 고딕 폰트 적용 한글꺠짐 방지
+# import platform
+# plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')  # 맥은 AppleGothic
 # plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자나올떄 깨짐방지
 # plt.figure(figsize=(9,6))
 # plt.plot(hist.history['loss'][2:] ,c='red', label='loss') #y값만 넣으면 시간순으로 그려줌.

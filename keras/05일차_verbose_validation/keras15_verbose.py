@@ -1,10 +1,12 @@
 #9-1 카피
+# [실습] verbose 옵션 이해하기
+# 훈련 과정을 화면에 얼마나 자세히 찍을지 정하는 것이 verbose다.
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 
 
-#1.데이터
+#1. 데이터
 
 x = np.array([1,2,3,4,5,6,7,8,9,10])
 y = np.array([1,2,3,4,5,6,7,8,9,10])
@@ -17,7 +19,7 @@ y_test = np.array([8,9,10])
 
 
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(3, input_dim=1))
 model.add(Dense(5))
@@ -26,21 +28,22 @@ model.add(Dense(1))
 
 
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer = 'adam')
 model.fit(x_train,y_train, epochs=100 , batch_size=4, 
           verbose=1,
           )
-#verbos = 0 :침묵 프로그레스 바 안나오고 결과만 나옴
-#verbos = 1 : 디폴트값 (기존에 쓰던방식)
-#verbos = 2 : 프로그레스 바 안보임
-#verbos = 3 : 프로그레스 바 안보임,에포크 횟수만 나옴 
-#verbos = 나머지 : 에포만 나옴. 
+#verbose = 0 : 침묵. 프로그레스 바 안 나오고 결과만 나옴
+#verbose = 1 : 디폴트값 (기존에 쓰던 방식)
+#verbose = 2 : 프로그레스 바 안 보임
+#verbose = 3 : 프로그레스 바 안 보임, 에포크 횟수만 나옴
+#verbose = 나머지 : 에포크만 나옴.
+# 출력을 줄이면 화면에 찍는 시간이 줄어서 훈련이 조금 빨라진다. 
 
 
 
 
-#4.평가,예측
+#4. 평가, 예측
 
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)

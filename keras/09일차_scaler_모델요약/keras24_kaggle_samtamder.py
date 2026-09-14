@@ -9,8 +9,9 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.metrics import accuracy_score
 
 
-#1.데이터 
-path = 'c://study//_data//kaggle_santander//'
+#1. 데이터
+path = './_data/kaggle_santander/'   #<<< 상대경로 (윈도우/맥 어디서나 동작)
+# path = 'c://study//_data//kaggle_santander//'   #<<< 윈도우 절대경로. // 두 개 써도 가능하지만 맥에서는 안 됨
 train_csv = pd.read_csv(path + 'train.csv', index_col=0)
 # print(train_csv)
 test_csv = pd.read_csv(path + 'test.csv', index_col=0 )
@@ -44,7 +45,7 @@ x_train,x_test,y_train,y_test =train_test_split(
 )
 
 
-# #2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(100, input_dim=200, activation= 'relu'))
 model.add(Dense(200, activation= 'relu'))
@@ -53,18 +54,18 @@ model.add(Dense(400, activation= 'relu'))
 model.add(Dense(200, activation= 'relu'))
 model.add(Dense(2,activation= 'softmax'))
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss ='categorical_crossentropy',
                 optimizer= 'adam',
                 metrics=['acc'],        
-            )  #이진분류에서는 loss = 'binary_crossetropy' 고정
+            )  #이진분류에서는 loss = 'binary_crossentropy' 고정
 es = EarlyStopping(
             monitor='val_loss',
             mode= 'auto',
             patience=100,
             restore_best_weights=True,
             )
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환 ,시작시간
 model.fit(x_train,y_train,
            epochs=100 , 
            batch_size=40000,
@@ -73,10 +74,10 @@ model.fit(x_train,y_train,
            )
 end_time = time.time()  #현재 시간을 반환 ,시작시간
 
-#4.평가,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)#이벨류에이트 할떄는 자체적으로 라운드처리해서 acc가 나옴
 print("loss:", loss)
-print('걸린시간 :',round(end_time - strat_time,2),'초')
+print('걸린시간 :',round(end_time - start_time,2),'초')
 
 y_predict = model.predict(x_test)
 

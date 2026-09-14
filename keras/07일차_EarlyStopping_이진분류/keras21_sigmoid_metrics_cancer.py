@@ -1,3 +1,14 @@
+# [실습] 이진 분류(Binary Classification) - 유방암 데이터셋
+#
+# 지금까지는 숫자를 맞히는 회귀(regression)였다.
+# 여기서부터는 "악성이냐 양성이냐" 둘 중 하나를 맞히는 분류(classification)다.
+# 회귀와 달라지는 곳이 딱 세 군데다.
+#
+#   1) 마지막 층 활성화 함수 : sigmoid             (0~1 사이 확률로 눌러준다)
+#   2) loss                  : binary_crossentropy (이진 분류 전용 손실 함수)
+#   3) 평가 지표             : accuracy            (몇 % 맞혔는지)
+#
+# 그리고 데이터를 나눌 때 stratify=y 를 꼭 넣어야 한다.
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
@@ -64,6 +75,9 @@ x_train,x_test,y_train,y_test =train_test_split(
     random_state=333,
     train_size=0.8,
     stratify=y,  #x,y데이터를 나눌떄 stratify=y이걸안넣으면 x,y서로 데이터 크기가 달랐을떄 비율편차가 생길수있음
+    # 분류 문제이므로 타겟(y)의 클래스 비율을 훈련/테스트 셋에 동일하게 유지한다.
+    # 원본이 0:212 / 1:357 이니 train과 test도 그 비율을 그대로 따라가게 만든다.
+    # 안 넣으면 한쪽에 0이 몰려서 학습이 치우칠 수 있다.
 )
 
 # print(np.unique(y_train,return_counts=True))
@@ -76,7 +90,7 @@ x_train,x_test,y_train,y_test =train_test_split(
 
 
 
-#2모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(30, input_dim=30, activation='relu'))
 model.add(Dense(60, activation='relu'))
@@ -84,28 +98,33 @@ model.add(Dense(70, activation='relu'))
 model.add(Dense(80, activation='relu'))
 model.add(Dense(60, activation='relu'))
 model.add(Dense(32, activation='relu'))  #기본 디폴트값은 리니어 
-model.add(Dense(1, activation='sigmoid'))  #마지막은 무조건 시그모이드 고정  
+model.add(Dense(1, activation='sigmoid'))  #마지막은 무조건 시그모이드 고정
+# sigmoid는 어떤 값이 들어와도 0~1 사이로 눌러준다.
+# 그래서 출력값을 "1일 확률"로 읽을 수 있게 된다.
 
 
-#3.컴파일 ,훈련
+#3. 컴파일, 훈련
 model.compile(loss ='binary_crossentropy',
                 optimizer= 'adam',
                 metrics=['acc'],  #몇 % 맞혔는지 보여줌 loss에는 관여x 모델이 계산한 loss값이 몇%의 확률인지 계산해주기만하는거임      
-            )  #이진분류에서는 loss = 'binary_crossetropy' 고정
+            )  #이진분류에서는 loss = 'binary_crossentropy' 고정
+# metrics에 넣은 값은 loss와 달리 훈련(가중치 갱신)에 관여하지 않는다.
+# 사람이 보라고 같이 찍어주는 참고 점수일 뿐이다.
+# 그래서 evaluate의 반환값이 [loss, accuracy] 두 개짜리 리스트가 된다.
 es = EarlyStopping(
             monitor='val_loss',
             mode= 'auto',
             patience=15,
             restore_best_weights=True,
             )
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환, 시작시간
 model.fit(x_train,y_train ,
            epochs= 500 , 
            batch_size=32,
            validation_split=0.2,
            callbacks =[es], 
            )
-end_time = time.time()  #현재 시간을 반환 ,시작시간
+end_time = time.time()  #훈련 끝난 시간을 반환, 끝시간
 
 #4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
@@ -115,6 +134,8 @@ print('acc:',round(loss[1],4)) #loss: 0번[0.12450382113456726,###LOSS값 (1번)
 print('==============================')
 y_pred = model.predict(x_test)  #시그모이드 함수를 거쳐 0,1사이 값을 반환후 >>metrics=['acc']로 후처리하면 0 OR 1로 반올림내림해서 퍼센테이지로 변환
 y_pred = np.round(y_pred)# y_pred한 값이 0.11121515,0.125148이런식으로 나와서 라운드처리후  [1.] 이런식으로 변환한다음에 acc값 비교 이거 안하면 에러남
+# 0.5를 기준으로 반올림한다. 0.5 이상이면 1, 미만이면 0.
+# accuracy_score는 정수 라벨끼리 비교하는 함수라서 확률값을 그대로 넣으면 에러가 난다.
 print(y_pred[:10])
 # print(y_pred[:10])
 from sklearn.metrics import accuracy_score

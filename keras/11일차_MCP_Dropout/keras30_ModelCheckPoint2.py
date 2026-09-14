@@ -1,3 +1,7 @@
+# [실습] ModelCheckpoint 2 - 저장한 체크포인트 불러오기
+#
+# keras30_ModelCheckPoint1에서 저장한 파일을 load_model로 불러온다.
+# 훈련이 끝난 최적 시점의 모델이므로 fit 없이 바로 평가할 수 있다.
 #30-1카피
 
 # import ssl
@@ -15,7 +19,7 @@ import time
 
 path = './_save/keras30/'  
 
-#1.데이터 
+#1. 데이터
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
@@ -44,13 +48,13 @@ model = load_model(path + 'keras30_mcp1.keras')
 
 
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)

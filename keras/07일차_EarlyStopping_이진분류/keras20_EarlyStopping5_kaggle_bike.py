@@ -1,3 +1,4 @@
+# [실습] EarlyStopping 적용 - 캐글 자전거 대여량
 # https://www.kaggle.com/competitions/bike-sharing-demand/data
 import numpy as np
 import pandas as pd
@@ -67,7 +68,7 @@ x_train,x_test, y_train, y_test = train_test_split(x,y,
 
 
 
-#2.모델구성
+#2. 모델구성
 
 model = Sequential()
 model.add(Dense(10, activation='relu', input_dim=8))
@@ -78,9 +79,14 @@ model.add(Dense(10,activation='relu'))
 model.add(Dense(1,activation='relu'))
 
 
-#3.컴파일 훈련
+#3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer= 'adam' )
 from tensorflow.keras.callbacks import EarlyStopping
+# EarlyStopping 옵션 설명은 keras20_EarlyStopping1_california.py 에 자세히 적어뒀다.
+#   monitor='val_loss'          → 검증 loss를 감시
+#   mode='auto'                 → 작아야 좋은지 커야 좋은지 케라스가 알아서 판단
+#   patience                    → 개선 없이 몇 epoch까지 참을지 (단위는 epoch)
+#   restore_best_weights=True   → 멈춘 시점이 아니라 가장 좋았던 시점의 W, b로 되돌림
 es = EarlyStopping(
     monitor='val_loss',
     mode='auto',
@@ -89,15 +95,13 @@ es = EarlyStopping(
 )
 hist = model.fit(x_train,y_train, epochs = 2000, batch_size=200, validation_split=0.33, callbacks=[es])
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
-
-y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
@@ -116,8 +120,10 @@ submission.to_csv(path + 'submit/' + 'submit_0904_3.csv')
 
 
 import matplotlib.pyplot as plt
-plt.rc('font', family='Malgun Gothic')  #맑은 고딕 폰트 적용 한글꺠짐 방지
-plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자나올떄 깨짐방지
+import platform
+# 한글 깨짐 방지. 윈도우는 맑은 고딕, 맥은 AppleGothic을 써야 한다.
+plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')
+plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자 나올때 깨짐방지
 plt.figure(figsize=(9,6))
 plt.plot(hist.history['loss'][2:] ,c='red', label='loss') #y값만 넣으면 시간순으로 그려줌.
 plt.plot(hist.history['val_loss'][2:] ,c='blue', label='val_loss')

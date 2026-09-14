@@ -8,7 +8,8 @@ import pandas as pd
 
 #1. 데이터
 
-path = 'c:\\study\\_data\\ddarung\\'   #<<< \\두개써도 가능
+path = './_data/ddarung/'      #<<< 상대경로 (윈도우/맥 어디서나 동작)
+# path = 'c:\study\_data\ddarung\'   #<<< 윈도우 절대경로. \ 두 개 써도 가능하지만 맥에서는 안 됨
 train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫번째 ID는 Y값 추청에 전혀 영향이 없으니 데이터로 사용하지않게함
 test_csv = pd.read_csv(path + "test.csv", index_col=0)
 submission = pd.read_csv(path + "submission.csv", index_col=0)
@@ -38,7 +39,7 @@ test_csv = test_csv.fillna(test_csv.mean())   ##
 
 # exit()
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(64, input_dim=9))
 model.add(Dense(32))
@@ -47,18 +48,18 @@ model.add(Dense(8))
 model.add(Dense(4))
 model.add(Dense(1))
 
-#3.컴파일 ,훈련
+#3. 컴파일, 훈련
 
 model.compile(loss = 'mse', optimizer = 'adam')
 model.fit(x_train,y_train , epochs= 500 , batch_size=32)
 
-#4.평가 예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 y2_pred = model.predict(test_csv)
 
@@ -103,7 +104,7 @@ submission.to_csv(path + 'submit/' + 'submit_0904_1148.csv')
 
 '''
 하이퍼 파라미터 튜닝
-#1.데이터 부분
+#1. 데이터부분
 random_state
 train_size
 #2.

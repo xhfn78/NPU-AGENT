@@ -1,3 +1,8 @@
+# [실습] 모델 저장하기 1 - 훈련 "전"에 저장
+#
+# model.save(경로) 는 모델의 구조 + 가중치를 파일 하나로 저장한다. (.keras 확장자)
+# 여기서는 훈련하기 전에 저장하므로, 저장되는 가중치는 아직 랜덤 초기값이다.
+# 즉 이 파일이 저장하는 건 사실상 "모델 설계도"에 가깝다.
 #28-1 카피
 
 # import ssl
@@ -10,7 +15,7 @@ from sklearn.metrics import r2_score,mean_squared_error
 import numpy as np
 import time
 
-#1.데이터 
+#1. 데이터
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
@@ -45,7 +50,7 @@ x_train = scaler.fit_transform(x_train)
 ##############################################################################
 x_test = scaler.transform(x_test) 
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(9, input_dim=8,activation='relu'))
 model.add(Dense(9,activation='relu'))
@@ -58,25 +63,26 @@ model.add(Dense(1))
 model.summary()
 
 path = './_save/keras29/'  
-model.save(path + 'keras29_1_save_model.keras') #가중치 세이브
+model.save(path + 'keras29_1_save_model.keras') #모델 구조 + 가중치 통째로 저장
 
 
 
-exit()
+exit()   # 여기서 프로그램을 끝낸다. 훈련 전 저장이 목적이라 아래 훈련 코드는 실행하지 않는다.
+         # 훈련까지 해보려면 이 줄을 주석 처리하면 된다.
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환 ,시작시간
 hist = model.fit(x_train,y_train, epochs=300, batch_size=64  ,validation_split=0.2)
 end_time = time.time()  #훈련 끝난 시간을 반환 , 끝시간
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)

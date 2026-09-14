@@ -1,43 +1,44 @@
-from sklearn.datasets import fetch_california_housing, load_diabetes #캘리포니아 집값 데이터셋,로드 디아벳
+from sklearn.datasets import fetch_california_housing, load_diabetes  # 캘리포니아 집값 데이터셋, 당뇨 데이터셋
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
-from sklearn.model_selection import train_test_split 
+from sklearn.model_selection import train_test_split
 import numpy as np
 
-#1.데이터
-
+#1. 데이터
+# 당뇨 데이터: feature 10개로 1년 뒤 병의 진행 정도(target)를 맞히는 회귀 문제.
 datasets = load_diabetes()
 x = datasets.data
 y = datasets.target
 
-print(x.shape,y.shape) #(442, 10) (442,)
+print(x.shape, y.shape)  # (442, 10) (442,)
 
-x_train,x_test,y_train,y_test = train_test_split(
-    x,y,
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y,
     random_state=21
 )
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
-model.add(Dense(3, input_dim=10))
+model.add(Dense(3, input_dim=10))  # feature가 10개이므로 input_dim=10
 model.add(Dense(5))
 model.add(Dense(1))
 
+#3. 컴파일, 훈련
+model.compile(loss='mse', optimizer='adam')
+model.fit(x_train, y_train, epochs=1000, batch_size=2)
 
-
-#3.컴파일,훈련
-model.compile(loss='mse', optimizer= 'adam')
-model.fit(x_train,y_train, epochs=1000, batch_size=2 )
-
-
-#4.평가,예측
+#4. 평가, 예측
 print("=========================================")
 
-#4.평가 예측
-loss = model.evaluate(x_test,y_test)
+loss = model.evaluate(x_test, y_test)
 print("loss:", loss)
 # results = model.predict(x)
 # print('결과값: ' ,results)
+
+# target 값 자체가 수십~수백 단위라서 mse(제곱 오차)도 수천 단위로 크게 나온다.
+# 값의 크기 때문이지 모델이 캘리포니아보다 훨씬 못한다는 뜻은 아니다.
+# (그래서 뒤에서 R2 같은 다른 평가 지표를 배운다 → keras12)
+
 #랜덤 442
 # =========================================
 # 4/4 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - loss: 2857.6667 

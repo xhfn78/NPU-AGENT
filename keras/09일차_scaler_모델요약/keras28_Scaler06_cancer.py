@@ -1,3 +1,8 @@
+# [실습] Scaler 4종 비교 - 유방암 (이진 분류)
+#
+# keras27과 달라진 점: 스케일러를 x_train에만 fit한다.
+# MinMax / Standard / MaxAbs / Robust 중 하나만 주석을 풀어서 쓰고,
+# 결과가 어떻게 달라지는지 아래 기록과 비교해본다.
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
@@ -8,7 +13,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.datasets import load_breast_cancer #유방암 관련 데이터셋 불러오기
 from sklearn.metrics import r2_score,mean_squared_error
 
-#1.데이터
+#1. 데이터
 
 datasets = load_breast_cancer()
 # print(datasets.DESCR)  #DESCR 실무에서는 쓸일 잘없음,사이킷런 제공데이터라
@@ -60,27 +65,50 @@ from sklearn.preprocessing import RobustScaler
 ##############################################################################
 # scaler = MinMaxScaler()
 ##############################################################################
+# MinMaxScaler
+#   X_scaled = (X - X_min) / (X_max - X_min)
+#   fit한 데이터의 최솟값을 0, 최댓값을 1로 만든다.
+#   단점: 이상치가 하나라도 있으면 Min/Max 자체가 그 이상치로 잡혀서 크게 흔들린다.
 
 
 
 ##############################################################################
 # scaler = StandardScaler()
 ##############################################################################
+# StandardScaler
+#   z = (x - 평균) / 표준편차
+#   평균을 0, 표준편차를 1로 만든다.
+#   z = 1 은 "평균보다 표준편차 1개만큼 위"라는 뜻이고, z = -2 는 "평균보다 2개만큼 아래"라는 뜻이다.
+#   단점: 평균과 표준편차도 이상치의 영향을 받는다.
 
 
 
 ##############################################################################
 # scaler = MaxAbsScaler()
 ##############################################################################
+# MaxAbsScaler
+#   X_scaled = X / max(|X|)
+#   그 feature의 최대 절댓값으로 나눈다. 예) [-50, 0, 100] → [-0.5, 0, 1.0]
+#   주의: 최솟값이 항상 -1이 되는 게 아니라, 절댓값이 가장 큰 값만 ±1이 된다.
+#   단점: 최대 절댓값을 기준으로 삼기 때문에 큰 이상치에 민감하다.
 
 
 ##############################################################################
 scaler = RobustScaler()
 ##############################################################################
+# 이상치에 강력함
+# RobustScaler
+#   X_scaled = (X - 중앙값) / IQR       (IQR = 3사분위수 - 1사분위수)
+#   중심을 평균 대신 중앙값으로, 폭을 표준편차 대신 IQR로 잡는다.
+#   중앙값과 IQR은 이상치 하나에 잘 흔들리지 않아서 이상치에 강하다.
+#   단, 이상치를 제거하는 게 아니라 이상치 때문에 스케일링 기준이 왜곡되는 걸 줄이는 것이다.
 
-scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
-x_test = scaler.transform(x_test) 
+# scaler.fit(x_train)   # fit만 하는 줄. 아래에서 fit_transform으로 한 번에 하므로 중복이라 꺼둔다.
+# [ 스케일러는 x_train에만 fit한다 ]
+#   x_test와 실전 데이터는 x_train에서 학습한 기준으로 transform만 해야 한다.
+#   test 데이터의 정보가 스케일러에 미리 반영되면 평가를 믿을 수 없게 되기 때문이다.
+x_train = scaler.fit_transform(x_train)   # x_train 기준을 학습(fit)하고 동시에 변환(transform)
+x_test = scaler.transform(x_test)         # test는 transform만 (fit 금지)
 
 # print(np.unique(y_train,return_counts=True))
 # # (array([0, 1]), array([175, 280])) #>>>startify 적용후 (array([0, 1]), array([170, 285]))
@@ -103,18 +131,18 @@ model.add(Dense(32, activation='relu'))  #기본 디폴트값은 리니어
 model.add(Dense(1, activation='sigmoid'))  #마지막은 무조건 시그모이드 고정  
 
 
-#3.컴파일 ,훈련
+#3. 컴파일, 훈련
 model.compile(loss ='binary_crossentropy',
                 optimizer= 'adam',
                 metrics=['acc'],        
-            )  #이진분류에서는 loss = 'binary_crossetropy' 고정
+            )  #이진분류에서는 loss = 'binary_crossentropy' 고정
 es = EarlyStopping(
             monitor='val_loss',
             mode= 'auto',
             patience=20,
             restore_best_weights=True,
             )
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환 ,시작시간
 model.fit(x_train,y_train ,
            epochs= 500 , 
            batch_size=32,

@@ -1,5 +1,5 @@
 # import ssl
-# ssl._create_default_https_context = ssl.create_default_context 다운로드 안될떄 사용할것
+# ssl._create_default_https_context = ssl.create_default_context  다운로드 안될때 사용할것
 
 from sklearn.datasets import fetch_california_housing
 from tensorflow.keras.models import Sequential
@@ -7,43 +7,44 @@ from tensorflow.keras.layers import Dense
 from sklearn.model_selection import train_test_split
 import numpy as np
 
-#1.데이터 
+#1. 데이터
+# 여기서부터는 직접 만든 숫자가 아니라 사이킷런이 제공하는 실제 데이터를 쓴다.
+# 캘리포니아 집값 데이터: feature 8개로 집값(target)을 맞히는 회귀 문제.
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
-print(datasets)
 
-x_train,x_test,y_train,y_test = train_test_split(
-    x,y,
+# print(datasets)   # 데이터 설명까지 통째로 출력된다 (양이 많아서 필요할 때만 켠다)
+
+print(x.shape, y.shape)  # (20640, 8) (20640,)
+
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y,
     random_state=42
 )
 
-print(x.shape,y.shape) #(20640, 8) (20640,)
-exit()
-#2.모델구성
+# exit()   # 여기서 프로그램을 멈추고 데이터만 확인하려고 썼던 줄. 켜두면 아래가 실행되지 않는다.
+
+#2. 모델구성
 model = Sequential()
-model.add(Dense(9, input_dim=8))
+model.add(Dense(9, input_dim=8))  # feature가 8개이므로 input_dim=8
 model.add(Dense(9))
 model.add(Dense(12))
 model.add(Dense(9))
 model.add(Dense(5))
-model.add(Dense(1))
+model.add(Dense(1))               # 회귀 문제라 출력은 1개
 
+#3. 컴파일, 훈련
+model.compile(loss='mse', optimizer='adam')
+model.fit(x_train, y_train, epochs=200, batch_size=16)
 
-
-#3.컴파일,훈련
-model.compile(loss='mse', optimizer= 'adam')
-model.fit(x_train,y_train, epochs=200, batch_size=16  )
-
-
-#4.평가,예측
+#4. 평가, 예측
 print("=========================================")
 
-#4.평가 예측
-loss = model.evaluate(x_test,y_test)
+loss = model.evaluate(x_test, y_test)
 print("loss:", loss)
 results = model.predict(x)
-print('결과값: ' ,results)
+print('결과값: ', results)
 
 # =========================================
 # 162/162 ━━━━━━━━━━━━━━━━━━━━ 0s 682us/step - loss: 0.6196

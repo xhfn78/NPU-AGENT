@@ -1,3 +1,7 @@
+# [실습] ModelCheckpoint 불러오기 - 보스턴 주택 가격 (회귀)
+#
+# keras31_MCP_save_03 가 저장해둔 체크포인트를 불러와서 평가만 한다.
+# 먼저 keras31_MCP_save_03 를 실행해서 저장 파일을 만들어야 동작한다.
 
 from tensorflow.keras.models import Sequential,load_model
 from tensorflow.keras.layers import Dense
@@ -8,7 +12,7 @@ from tensorflow.keras.callbacks import EarlyStopping,ModelCheckpoint
 
 path = './_save/keras30/' 
 
-#1.데이터
+#1. 데이터
 (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
 print(x_train.shape, x_test.shape) #(404, 13) (102, 13)
 print(y_train.shape, y_test.shape) #(404,) (102,)
@@ -27,10 +31,10 @@ x_test = scaler.transform(x_test)
 
 model = load_model(path +'k30_0914_1439-0088-23.6130.keras' )
 
-#4.평가,예측
+#4. 평가, 예측
 print("=========================================")
 
-#4.평가 예측
+#4. 평가, 예측
 
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)

@@ -1,3 +1,8 @@
+# [실습] Scaler 4종 비교 - 따릉이 대여량 (회귀, 데이콘)
+#
+# keras27과 달라진 점: 스케일러를 x_train에만 fit한다.
+# MinMax / Standard / MaxAbs / Robust 중 하나만 주석을 풀어서 쓰고,
+# 결과가 어떻게 달라지는지 아래 기록과 비교해본다.
 #https://dacon.io/competitions/open/235576/codeshare 대회 주소
 import numpy as np
 from tensorflow.keras.models import Sequential
@@ -8,7 +13,8 @@ import pandas as pd
 
 #1. 데이터
 
-path = 'c:\\study\\_data\\ddarung\\'   #<<< \\두개써도 가능
+path = './_data/ddarung/'      #<<< 상대경로 (윈도우/맥 어디서나 동작)
+# path = 'c:\study\_data\ddarung\'   #<<< 윈도우 절대경로. \ 두 개 써도 가능하지만 맥에서는 안 됨
 train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫번째 ID는 Y값 추청에 전혀 영향이 없으니 데이터로 사용하지않게함
 test_csv = pd.read_csv(path + "test.csv", index_col=0)
 submission = pd.read_csv(path + "submission.csv", index_col=0)
@@ -25,26 +31,49 @@ from sklearn.preprocessing import RobustScaler
 ##############################################################################
 # scaler = MinMaxScaler()
 ##############################################################################
+# MinMaxScaler
+#   X_scaled = (X - X_min) / (X_max - X_min)
+#   fit한 데이터의 최솟값을 0, 최댓값을 1로 만든다.
+#   단점: 이상치가 하나라도 있으면 Min/Max 자체가 그 이상치로 잡혀서 크게 흔들린다.
 
 
 
 ##############################################################################
 # scaler = StandardScaler()
 ##############################################################################
+# StandardScaler
+#   z = (x - 평균) / 표준편차
+#   평균을 0, 표준편차를 1로 만든다.
+#   z = 1 은 "평균보다 표준편차 1개만큼 위"라는 뜻이고, z = -2 는 "평균보다 2개만큼 아래"라는 뜻이다.
+#   단점: 평균과 표준편차도 이상치의 영향을 받는다.
 
 
 
 ##############################################################################
 # scaler = MaxAbsScaler()
 ##############################################################################
+# MaxAbsScaler
+#   X_scaled = X / max(|X|)
+#   그 feature의 최대 절댓값으로 나눈다. 예) [-50, 0, 100] → [-0.5, 0, 1.0]
+#   주의: 최솟값이 항상 -1이 되는 게 아니라, 절댓값이 가장 큰 값만 ±1이 된다.
+#   단점: 최대 절댓값을 기준으로 삼기 때문에 큰 이상치에 민감하다.
 
 
 ##############################################################################
 scaler = RobustScaler()
 ##############################################################################
-scaler.fit(x_train) # x 값을  MinMaxScaler으로 실행시킬 준비
-x_train = scaler.fit_transform(x_train) # 0~1 값 변환 사이로변환
-x_test = scaler.transform(x_test) 
+# 이상치에 강력함
+# RobustScaler
+#   X_scaled = (X - 중앙값) / IQR       (IQR = 3사분위수 - 1사분위수)
+#   중심을 평균 대신 중앙값으로, 폭을 표준편차 대신 IQR로 잡는다.
+#   중앙값과 IQR은 이상치 하나에 잘 흔들리지 않아서 이상치에 강하다.
+#   단, 이상치를 제거하는 게 아니라 이상치 때문에 스케일링 기준이 왜곡되는 걸 줄이는 것이다.
+# scaler.fit(x_train)   # fit만 하는 줄. 아래에서 fit_transform으로 한 번에 하므로 중복이라 꺼둔다.
+# [ 스케일러는 x_train에만 fit한다 ]
+#   x_test와 실전 데이터는 x_train에서 학습한 기준으로 transform만 해야 한다.
+#   test 데이터의 정보가 스케일러에 미리 반영되면 평가를 믿을 수 없게 되기 때문이다.
+x_train = scaler.fit_transform(x_train)   # x_train 기준을 학습(fit)하고 동시에 변환(transform)
+x_test = scaler.transform(x_test)         # test는 transform만 (fit 금지)
 
 
 #####################submit 작업 ################################
@@ -72,7 +101,7 @@ test_csv = scaler.transform(test_csv)
 #  3   hour_bef_windspeed      715 non-null    float64
 # exit()
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(64, input_dim=9))
 model.add(Dense(32))
@@ -81,7 +110,7 @@ model.add(Dense(8))
 model.add(Dense(4))
 model.add(Dense(1))
 
-#3.컴파일 ,훈련
+#3. 컴파일, 훈련
 
 model.compile(loss = 'mse', optimizer = 'adam')
 from tensorflow.keras.callbacks import EarlyStopping
@@ -93,13 +122,13 @@ es = EarlyStopping(
 )
 hist = model.fit(x_train,y_train , epochs= 500 , batch_size=32,validation_split=0.2, callbacks=[es])
 
-#4.평가 예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 y2_pred = model.predict(test_csv)
 
@@ -139,7 +168,9 @@ submission['count'] = y_submit
 submission.to_csv(path + 'submit/' + 'submit_0904_1148.csv')
 
 import matplotlib.pyplot as plt
-plt.rc('font', family='Malgun Gothic')  #맑은 고딕 폰트 적용 한글꺠짐 방지
+import platform
+# 한글 깨짐 방지. 윈도우는 맑은 고딕, 맥은 AppleGothic을 써야 한다.
+plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')
 plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자나올떄 깨짐방지
 plt.figure(figsize=(9,6))
 plt.plot(hist.history['loss'][2:] ,c='red', label='loss') #y값만 넣으면 시간순으로 그려줌.
@@ -156,7 +187,7 @@ plt.show()
 
 '''
 하이퍼 파라미터 튜닝
-#1.데이터 부분
+#1. 데이터부분
 random_state
 train_size
 #2.

@@ -1,4 +1,9 @@
-#https://dacon.io/competitions/open/235576/codeshare 대회 주소
+# [실습] EarlyStopping 적용 + 결측치 처리 2 (평균값 채우기) - 따릉이
+# https://dacon.io/competitions/open/235576/codeshare 대회 주소
+#
+# keras13에서는 결측치가 있는 행을 통째로 지웠다(dropna).
+# 하지만 test_csv는 제출용이라 행을 지우면 안 된다. 715행을 그대로 다 예측해야 한다.
+# 그래서 test_csv는 지우는 대신 평균값으로 채운다(fillna).
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -8,7 +13,8 @@ import pandas as pd
 
 #1. 데이터
 
-path = 'c:\\study\\_data\\ddarung\\'   #<<< \\두개써도 가능
+path = './_data/ddarung/'      #<<< 상대경로 (윈도우/맥 어디서나 동작)
+# path = 'c:\study\_data\ddarung\'   #<<< 윈도우 절대경로. \ 두 개 써도 가능하지만 맥에서는 안 됨
 train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫번째 ID는 Y값 추청에 전혀 영향이 없으니 데이터로 사용하지않게함
 test_csv = pd.read_csv(path + "test.csv", index_col=0)
 submission = pd.read_csv(path + "submission.csv", index_col=0)
@@ -39,7 +45,7 @@ x_train,x_test,y_train,y_test = train_test_split(
 #  8   hour_bef_pm2.5          679 non-null    float64
 
 ######################결측치 처리 2.평균값 넣기 ####################
-test_csv = test_csv.fillna(test_csv.mean())   ##
+test_csv = test_csv.fillna(test_csv.mean())   # 각 열의 평균값으로 빈칸을 채운다
 # print(test_csv.info()) #(715, 9)
 # print(test_csv.shape) #(715, 9)
 
@@ -61,7 +67,7 @@ test_csv = test_csv.fillna(test_csv.mean())   ##
 
 # exit()
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(64, input_dim=9))
 model.add(Dense(32))
@@ -70,10 +76,15 @@ model.add(Dense(8))
 model.add(Dense(4))
 model.add(Dense(1))
 
-#3.컴파일 ,훈련
+#3. 컴파일, 훈련
 
 model.compile(loss = 'mse', optimizer = 'adam')
 from tensorflow.keras.callbacks import EarlyStopping
+# EarlyStopping 옵션 설명은 keras20_EarlyStopping1_california.py 에 자세히 적어뒀다.
+#   monitor='val_loss'          → 검증 loss를 감시
+#   mode='auto'                 → 작아야 좋은지 커야 좋은지 케라스가 알아서 판단
+#   patience                    → 개선 없이 몇 epoch까지 참을지 (단위는 epoch)
+#   restore_best_weights=True   → 멈춘 시점이 아니라 가장 좋았던 시점의 W, b로 되돌림
 es = EarlyStopping(
     monitor='val_loss',
     mode='auto',
@@ -82,15 +93,13 @@ es = EarlyStopping(
 )
 hist = model.fit(x_train,y_train , epochs= 500 , batch_size=32,validation_split=0.2, callbacks=[es])
 
-#4.평가 예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
-print('r2결과값: ' ,r2)
-
-y2_pred = model.predict(test_csv)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
@@ -145,8 +154,10 @@ submission['count'] = y_submit
 submission.to_csv(path + 'submit/' + 'submit_0904_1148.csv')
 
 import matplotlib.pyplot as plt
-plt.rc('font', family='Malgun Gothic')  #맑은 고딕 폰트 적용 한글꺠짐 방지
-plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자나올떄 깨짐방지
+import platform
+# 한글 깨짐 방지. 윈도우는 맑은 고딕, 맥은 AppleGothic을 써야 한다.
+plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')
+plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자 나올때 깨짐방지
 plt.figure(figsize=(9,6))
 plt.plot(hist.history['loss'][2:] ,c='red', label='loss') #y값만 넣으면 시간순으로 그려줌.
 plt.plot(hist.history['val_loss'][2:] ,c='blue', label='val_loss')

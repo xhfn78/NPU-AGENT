@@ -1,3 +1,8 @@
+# [실습] ModelCheckpoint 1 - 최적 모델을 파일로 저장하기
+#
+# EarlyStopping은 최적 가중치를 메모리에 되돌려줄 뿐 프로그램이 끝나면 사라진다.
+# ModelCheckpoint는 그 최적 시점을 파일로 남겨서 나중에 다시 불러 쓸 수 있게 한다.
+# 여기서는 파일명을 고정해서 저장한다 (실행할 때마다 덮어써진다).
 #29-6카피
 
 # import ssl
@@ -15,7 +20,7 @@ import time
 
 path = './_save/keras30/'  
 
-#1.데이터 
+#1. 데이터
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
@@ -38,7 +43,7 @@ x_train = scaler.fit_transform(x_train)
 ##############################################################################
 x_test = scaler.transform(x_test) 
 
-# #2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(9, input_dim=8,activation='relu'))
 model.add(Dense(9,activation='relu'))
@@ -48,7 +53,7 @@ model.add(Dense(5,activation='relu'))
 model.add(Dense(1))
 
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
 es = EarlyStopping(
     monitor='val_loss',
@@ -57,6 +62,17 @@ es = EarlyStopping(
     verbose=1,
     restore_best_weights=True,
 )
+# ModelCheckpoint(MCP)란?
+#   훈련 도중 val_loss가 가장 좋았던 순간의 모델을 파일로 자동 저장해주는 콜백이다.
+#
+#   EarlyStopping의 restore_best_weights=True 와 뭐가 다른가?
+#     EarlyStopping : 최적 가중치를 "메모리 안의 model"에 되돌려준다. 프로그램이 끝나면 사라진다.
+#     ModelCheckpoint: 최적 시점의 모델을 "파일"로 남긴다. 나중에 다시 불러 쓸 수 있다.
+#
+#   주요 옵션
+#     monitor='val_loss'    → 무엇을 기준으로 좋고 나쁨을 볼지
+#     save_best_only=True   → 좋아졌을 때만 덮어쓴다 (False면 매 epoch 저장해서 파일이 쏟아진다)
+#     filepath              → 저장할 경로와 파일명
 mcp = ModelCheckpoint(
     monitor='val_loss',
     mode= 'auto',
@@ -64,7 +80,7 @@ mcp = ModelCheckpoint(
     filepath = path + 'keras30_mcp1.keras',
     verbose=1,
 )
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환 ,시작시간
 hist = model.fit(x_train,y_train, 
                  epochs=500, 
                  batch_size=32,
@@ -76,13 +92,13 @@ end_time = time.time()  #훈련 끝난 시간을 반환 , 끝시간
 
 
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)

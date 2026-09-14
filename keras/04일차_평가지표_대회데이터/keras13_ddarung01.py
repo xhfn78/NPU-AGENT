@@ -1,4 +1,10 @@
-#https://dacon.io/competitions/open/235576/codeshare 대회 주소
+# 따릉이 따릉이 대여량 예측 (데이콘)
+# https://dacon.io/competitions/open/235576/codeshare 대회 주소
+#
+# 여기서부터는 사이킷런이 만들어준 깔끔한 데이터가 아니라
+# 대회에서 받은 csv 파일을 직접 읽어서 쓴다. 그래서 두 가지가 새로 생긴다.
+#   1) 결측치(NaN) 처리
+#   2) train_csv에서 x와 y를 직접 분리하기
 import numpy as np
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -8,12 +14,12 @@ import pandas as pd
 
 #1. 데이터
 
-path = "./_data/ddarung/" #<<< 상대경로
-# path = 'c:/study/_data/ddarung/'  #<<절대경로
-# path = 'c\study\_data\ddarung'  #<<< \ 역슬래쉬로도 사용가능 /s를 인식해서 에러
-# path = 'c://study//_data//ddarung//'  #<<< //두개써도 가능
-# path = 'c:\\study\\_data\\ddarung\\'   #<<< \\두개써도 가능
-# path = 'c:\\study\\_data\\ddarung\\'
+path = "./_data/ddarung/"   #<<< 상대경로. 윈도우/맥 어디서나 동작하므로 이걸 쓴다.
+# 아래는 절대경로로 쓰는 여러 방법. 다만 윈도우 전용이라 맥에서는 동작하지 않는다.
+# path = 'c:/study/_data/ddarung/'       #<< 절대경로
+# path = 'c:\\study\\_data\\ddarung\\'  #<< \\ 두 개로도 가능
+# path = 'c://study//_data//ddarung//'   #<< // 두 개로도 가능
+# path = 'c\study\_data\ddarung'       #<< \ 하나만 쓰면 \s 등을 특수문자로 인식해서 에러
 
 train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫번째 ID는 Y값 추청에 전혀 영향이 없으니 데이터로 사용하지않게함
 # print(train_csv)
@@ -34,6 +40,7 @@ train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫
 
 # [1459 rows x 10 columns]  index_col=0 적용후 컬럼 11 >>> 10으로 바뀜
 
+# test_csv는 정답(count) 열이 없다. 대회에 제출할 예측값을 만들 때 model.predict()에 넣는 값이다.
 test_csv = pd.read_csv(path + "test.csv", index_col=0)
 # print(test_csv)
 
@@ -44,6 +51,7 @@ test_csv = pd.read_csv(path + "test.csv", index_col=0)
 
 # [715 rows x 9 columns]
 
+# 제출용 파일. 여기의 빈 칸(NaN)에 model.predict(test_csv) 결과를 채워서 대회에 낸다.
 submission = pd.read_csv(path + "submission.csv", index_col=0)
 # print(submission)
 
@@ -87,6 +95,8 @@ print(train_csv)   #[1328 rows x 10 columns]
 
 ############################train_cs를 x와 y로 분리##################################
 
+# axis=1 이면 열(컬럼)을 지운다는 뜻이다. (axis=0이면 행)
+# count가 맞혀야 할 정답이므로 x에서는 빼야 한다.
 x = train_csv.drop(['count'], axis=1)  #열(컬럼) 삭제  drop(['컬럼명 넣으면됨'])
 
 print(x)  #[1328 rows x 9 columns]
@@ -102,7 +112,7 @@ x_train,x_test,y_train,y_test = train_test_split(
 
 
 
-#2.모델구성
+#2. 모델구성
 
 model = Sequential()
 model.add(Dense(64, input_dim=9))
@@ -113,24 +123,28 @@ model.add(Dense(4))
 model.add(Dense(1))
 
 
-#3.컴파일 ,훈련
+#3. 컴파일, 훈련
 
 model.compile(loss = 'mse', optimizer = 'adam')
 model.fit(x_train,y_train , epochs= 100 , batch_size=40)
 
 
-#4.평가 ,예측
-
-#4.평가 예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 y_predict = model.predict(x_test)
 print("loss:", loss)
 
 r2 = r2_score(y_test, y_predict)
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
+
+def RMSE(y_test, y_predict):  #RMSE 함수정의
+    return np.sqrt(mean_squared_error(y_test,y_predict))
+
+rmse = RMSE(y_test, y_predict)
+print('RMSE : ', rmse)
 
 # loss: 2726.558837890625
 # 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 

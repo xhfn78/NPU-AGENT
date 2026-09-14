@@ -1,5 +1,7 @@
 # https://www.kaggle.com/competitions/bike-sharing-demand/data
 #14-1 카피
+# [실습] 모델 학습에 걸린 시간 측정하기
+# time.time()으로 훈련 전후의 시각을 찍어 그 차이를 구한다.
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import Sequential
@@ -71,7 +73,7 @@ x_train,x_test, y_train, y_test = train_test_split(x,y,
 
 
 
-#2.모델구성
+#2. 모델구성
 
 model = Sequential()
 model.add(Dense(10, activation='relu', input_dim=8))
@@ -82,22 +84,21 @@ model.add(Dense(10,activation='relu'))
 model.add(Dense(1,activation='relu'))
 
 
-#3.컴파일 훈련
+#3. 컴파일, 훈련
 model.compile(loss = 'mse', optimizer= 'adam' )
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환, 시작시간
 model.fit(x_train,y_train, epochs = 500, batch_size=200)
-end_time = time.time()  #훈련 끝난 시간을 반환 , 끝시간
+end_time = time.time()  #훈련 끝난 시간을 반환, 끝시간
+# verbose를 0으로 낮추면 화면에 찍는 시간이 줄어서 걸린 시간도 줄어든다.
 
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
-
-y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
@@ -109,7 +110,7 @@ rmse = RMSE(y_test, y_predict)
 
 print('RMSE : ', rmse) 
 
-print('걸린시간 :',round(end_time - strat_time,2),'초') #round() = 소수둘째 자리까지 반올림해서 표시해줌 
+print('걸린시간 :',round(end_time - start_time,2),'초') #round() = 소수둘째 자리까지 반올림해서 표시해줌 
 
 # y_submit = model.predict(test_csv)  #test_csv를 pred 에(예측값에 넣고) y_서브밋에 저장
 # submission['count'] = y_submit # Y_서브밋에 저장된 내용을 서브미션 파일에 "count" 컬럼에 내용 추가 

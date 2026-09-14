@@ -1,3 +1,5 @@
+# [실습] 과적합 확인 - 당뇨병 데이터셋
+# hist에 담긴 loss와 val_loss를 같이 그려서, val_loss가 언제부터 올라가는지 본다.
 from sklearn.datasets import fetch_california_housing, load_diabetes #캘리포니아 집값 데이터셋,로드 디아벳
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
@@ -5,7 +7,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn.metrics import r2_score,mean_squared_error
 
-#1.데이터
+#1. 데이터
 
 datasets = load_diabetes()
 x = datasets.data
@@ -18,7 +20,7 @@ x_train,x_test,y_train,y_test = train_test_split(
     random_state=21
 )
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(3, input_dim=10))
 model.add(Dense(5))
@@ -26,21 +28,20 @@ model.add(Dense(1))
 
 
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
 hist = model.fit(x_train,y_train, epochs=100, batch_size=2 ,validation_split=0.2)
 
 
-#4.평가,예측
+#4. 평가, 예측
 print("=========================================")
 
-#4.평가 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
@@ -73,8 +74,10 @@ print('RMSE : ', rmse)
 # 14/14 ━━━━━━━━━━━━━━━━━━━━ 0s 3ms/step 
 # 결과값:  [[204.20064 ]
 import matplotlib.pyplot as plt
-plt.rc('font', family='Malgun Gothic')  #맑은 고딕 폰트 적용 한글꺠짐 방지
-plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자나올떄 깨짐방지
+import platform
+# 한글 깨짐 방지. 윈도우는 맑은 고딕, 맥은 AppleGothic을 써야 한다.
+plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')
+plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자 나올때 깨짐방지
 plt.figure(figsize=(9,6))
 plt.plot(hist.history['loss'][2:] ,c='red', label='loss') #y값만 넣으면 시간순으로 그려줌.
 plt.plot(hist.history['val_loss'][2:] ,c='blue', label='val_loss')

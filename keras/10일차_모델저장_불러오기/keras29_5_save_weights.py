@@ -1,3 +1,11 @@
+# [실습] 가중치만 저장하기 - save_weights
+#
+# model.save()          → 구조 + 가중치를 모두 저장 (.keras)
+# model.save_weights()  → 가중치(w, b)만 저장      (.weights.h5)
+#
+# 가중치만 저장하면 파일이 작지만, 나중에 불러올 때
+# 저장할 때와 똑같은 모델 구조를 먼저 만들어놓아야 한다.
+# 구조가 다르면 가중치의 모양이 안 맞아서 에러가 난다.
 #29-3카피
 
 # import ssl
@@ -11,7 +19,7 @@ import numpy as np
 import time
 
 
-#1.데이터 
+#1. 데이터
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
@@ -46,7 +54,7 @@ x_train = scaler.fit_transform(x_train)
 ##############################################################################
 x_test = scaler.transform(x_test) 
 
-#2.모델구성
+#2. 모델구성
 model = Sequential()
 model.add(Dense(9, input_dim=8,activation='relu'))
 model.add(Dense(9,activation='relu'))
@@ -58,17 +66,18 @@ model.add(Dense(1))
 # model.summary()
 
 path = './_save/keras29/'  
-# model.save(path + 'keras29_1_save_model.keras') #가중치 세이브
+# model.save(path + 'keras29_1_save_model.keras') #모델 구조 + 가중치 통째로 저장
 model.save_weights(path + 'keras29_5_save_1.weights.h5') #가중치 세이브
 
 
 # model = load_model(path + 'keras29_1_save_model.keras') #저장된 모델 불러오기
 model.summary()
-# exit()
+# exit()   # 여기서 프로그램을 끝낸다. 훈련 전 저장이 목적이라 아래 훈련 코드는 실행하지 않는다.
+         # 훈련까지 해보려면 이 줄을 주석 처리하면 된다.
 
-#3.컴파일,훈련
+#3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
-strat_time = time.time()  #현재 시간을 반환 ,시작시간
+start_time = time.time()  #현재 시간을 반환 ,시작시간
 from tensorflow.keras.callbacks import EarlyStopping
 es = EarlyStopping(
     monitor='val_loss',
@@ -80,19 +89,19 @@ hist = model.fit(x_train,y_train, epochs=100, batch_size=64  ,validation_split=0
 end_time = time.time()  #훈련 끝난 시간을 반환 , 끝시간
 
 #######################################################
-# model.save(path + 'keras29_3_save_model.keras') #가중치 세이브
+# model.save(path + 'keras29_3_save_model.keras') #훈련이 끝난 상태로 저장
 #######################################################
 
 model.save_weights(path + 'keras29_5_save_2.weights.h5') #가중치 세이브
 
 
-#4.평가 ,예측
+#4. 평가, 예측
 loss = model.evaluate(x_test,y_test)
 print("loss:", loss)
 
 y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict) 
-print('r2결과값: ' ,r2)
+print('r2 : ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
