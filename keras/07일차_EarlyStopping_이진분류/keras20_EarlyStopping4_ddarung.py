@@ -73,7 +73,14 @@ model.add(Dense(1))
 #3.컴파일 ,훈련
 
 model.compile(loss = 'mse', optimizer = 'adam')
-hist = model.fit(x_train,y_train , epochs= 500 , batch_size=32,validation_split=0.2)
+from tensorflow.keras.callbacks import EarlyStopping
+es = EarlyStopping(
+    monitor='val_loss',
+    mode='auto',
+    patience=20,
+    restore_best_weights=True,
+)
+hist = model.fit(x_train,y_train , epochs= 500 , batch_size=32,validation_split=0.2, callbacks=[es])
 
 #4.평가 예측
 loss = model.evaluate(x_test,y_test)

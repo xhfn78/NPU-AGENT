@@ -45,4 +45,47 @@ print("loss:", loss)
 r2 = r2_score(y_test, y_predict)
 print('결과값: ' ,r2)
 
+mse = mean_squared_error(y_test,y_predict)
+print('mse : ', mse)
+
+def RMSE(y_test, y_predict):  #RMSE 함수정의
+    return np.sqrt(mean_squared_error(y_test,y_predict))
+
+rmse = RMSE(y_test, y_predict)
+print('RMSE : ', rmse)
+
 # R2기준 0.55 만들기
+
+# ============================================================
+# California 단계별 결과 누적 비교
+# 기존 주석에서 확인한 과거 기록이며, 이번에 새로 훈련한 결과는 아님.
+# 단계마다 random_state, 층 구성, epochs, batch_size 등이 달라 기능 하나의 효과로 단정하지 않기.
+# loss / MSE / RMSE는 낮을수록, R2는 높을수록 좋음.
+# 미기록 칸은 실제 실행 후 채우기. 아래쪽 파일일수록 앞 단계 기록을 누적함.
+# ============================================================
+#
+# 11. 기본 회귀 모델
+# 파일: keras11_1_califonia.py
+# 기존 주석 기록: loss = 0.6195971369743347
+# r2 / mse / RMSE: 당시 별도 기록 없음
+#
+# 12. R2 / MSE / RMSE 추가
+# 파일: keras12_R2_RMSE_02_california.py
+# 이 단계 결과: 미기록
+#
+# ------------------------------------------------------------
+# 이번 파일을 다시 실행한 결과 기록
+# 실행 날짜: 
+# 추가 / 변경한 내용: 
+# 현재 코드 설정 (과거 결과의 실행 조건을 뜻하지 않음):
+# random_state = 500 / train_size = 미지정 (기본 분할)
+# epochs = 200 / batch_size = 60 / validation_split = 없음
+# 실제 훈련한 epoch 수: 
+# loss: 
+# r2: 
+# mse: 
+# RMSE: 
+# 이전 비교 대상 파일: 
+# 이전 결과보다 좋아진 점 / 나빠진 점: 
+# 다음 실험에서 바꿀 내용: 
+# ============================================================

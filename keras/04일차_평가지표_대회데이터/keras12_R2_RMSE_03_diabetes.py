@@ -43,4 +43,13 @@ print("loss:", loss)
 r2 = r2_score(y_test, y_predict)
 print('결과값: ' ,r2)
 
+mse = mean_squared_error(y_test,y_predict)
+print('mse : ', mse)
+
+def RMSE(y_test, y_predict):  #RMSE 함수정의
+    return np.sqrt(mean_squared_error(y_test,y_predict))
+
+rmse = RMSE(y_test, y_predict)
+print('RMSE : ', rmse)
+
 #R2기준 0.62 이상 만들기

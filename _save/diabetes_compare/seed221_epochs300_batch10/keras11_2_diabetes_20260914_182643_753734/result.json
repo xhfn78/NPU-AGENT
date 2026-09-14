@@ -1,0 +1,36 @@
+{
+  "stage": "keras11_2_diabetes",
+  "config": {
+    "seed": 221,
+    "epochs": 300,
+    "batch_size": 10,
+    "split_seed": 221,
+    "train_size": 0.75,
+    "validation_fraction": 0.2,
+    "shuffle": false,
+    "dense_units": [
+      3,
+      10,
+      15,
+      20,
+      10,
+      1
+    ],
+    "activation": "relu",
+    "optimizer": "adam",
+    "learning_rate": 0.001,
+    "patience": 15,
+    "tensorflow": "2.21.0",
+    "comparison_version": 1
+  },
+  "initial_weights_sha256": "a5b624bc9d76e29249f7c7f92b7f47f8bc29ec48fed56c1193a8fb96478fbd6e",
+  "loss": 2306.014404296875,
+  "mse": 2306.0145606011683,
+  "rmse": 48.02098042107396,
+  "r2": 0.6052118983483359,
+  "epochs_run": 300,
+  "best_epoch": null,
+  "best_val_loss": null,
+  "seconds": 25.378470199997537,
+  "run_dir": "C:\\study\\_save\\diabetes_compare\\seed221_epochs300_batch10\\keras11_2_diabetes_20260914_182643_753734"
+}
