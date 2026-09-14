@@ -32,7 +32,7 @@ model.add(Dense(1))
 model.compile(loss='mse', optimizer = 'adam')
 model.fit(x_train,y_train, epochs=100 , batch_size=4, 
           verbose=1,
-        #   validation_data = (x_val,y_val)  # 1epochs 당 train >validation 훈련>검증 로직으로 돌아감 
+        # validation_data = (x_val,y_val)  # 1epochs 당 train >validation 훈련>검증 로직으로 돌아감 
           validation_split=0.33,  
           )
 #verbos = 0 :침묵 프로그레스 바 안나오고 결과만 나옴
