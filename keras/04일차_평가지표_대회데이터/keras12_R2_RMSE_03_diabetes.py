@@ -37,11 +37,10 @@ model.fit(x_train,y_train, epochs=500, batch_size=8)
 print("=========================================")
 
 loss = model.evaluate(x_test,y_test)
-print("loss:", loss)
 y_predict = model.predict(x_test)
+
+print("loss:", loss)
 r2 = r2_score(y_test, y_predict)
-
-
 print('결과값: ' ,r2)
 
 #R2기준 0.62 이상 만들기

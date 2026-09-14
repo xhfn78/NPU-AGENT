@@ -12,7 +12,7 @@ y = np.array([1,2,3,4,5,6])
 #2 모델 구성
 
 model = Sequential()
-model.add(Dense(1, input_dim=1 ))
+model.add(Dense(1, input_dim=1))
 
 
 #3.컴파일, 훈련
@@ -32,3 +32,6 @@ print("7의 예측값: ", result)
  #[5.022832  ]
  #[6.0492887 ]
  #[7.075746  ]]
+loss = model.evaluate(x,y)
+
+result = model.predict(np.array([1,2,3,4,5,6,7])) 

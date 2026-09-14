@@ -20,6 +20,7 @@ x_train,x_test,y_train,y_test = train_test_split(
     random_state=333
 )
 
+
 from sklearn.preprocessing import MinMaxScaler,StandardScaler,MaxAbsScaler  #preprocessing(전처리)
 from sklearn.preprocessing import RobustScaler
 ##############################################################################
@@ -79,13 +80,6 @@ print('r2결과값: ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
-
-def RMSE(y_test, y_predict):  #RMSE 함수정의
-    return np.sqrt(mean_squared_error(y_test,y_predict))  #np.sqrt하면 mse에 루트가 씌워짐
-
-rmse = RMSE(y_test, y_predict)
-
-print('RMSE : ', rmse) 
 
 
 # StandardScaler

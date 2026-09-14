@@ -11,6 +11,7 @@ import numpy as np
 datasets = fetch_california_housing()
 x = datasets.data
 y = datasets.target
+print(datasets)
 
 x_train,x_test,y_train,y_test = train_test_split(
     x,y,
@@ -18,7 +19,7 @@ x_train,x_test,y_train,y_test = train_test_split(
 )
 
 print(x.shape,y.shape) #(20640, 8) (20640,)
-
+exit()
 #2.모델구성
 model = Sequential()
 model.add(Dense(9, input_dim=8))

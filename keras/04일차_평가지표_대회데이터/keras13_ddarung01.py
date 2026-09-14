@@ -8,11 +8,11 @@ import pandas as pd
 
 #1. 데이터
 
-# path = "./_data/ddarung/" #<<< 상대경로
+path = "./_data/ddarung/" #<<< 상대경로
 # path = 'c:/study/_data/ddarung/'  #<<절대경로
 # path = 'c\study\_data\ddarung'  #<<< \ 역슬래쉬로도 사용가능 /s를 인식해서 에러
 # path = 'c://study//_data//ddarung//'  #<<< //두개써도 가능
-path = 'c:\\study\\_data\\ddarung\\'   #<<< \\두개써도 가능
+# path = 'c:\\study\\_data\\ddarung\\'   #<<< \\두개써도 가능
 # path = 'c:\\study\\_data\\ddarung\\'
 
 train_csv = pd.read_csv(path + "train.csv",index_col=0 )#index_col 데이터 첫번째 ID는 Y값 추청에 전혀 영향이 없으니 데이터로 사용하지않게함
@@ -123,22 +123,14 @@ model.fit(x_train,y_train , epochs= 100 , batch_size=40)
 
 #4.평가 예측
 loss = model.evaluate(x_test,y_test)
+y_predict = model.predict(x_test)
 print("loss:", loss)
 
-y_predict = model.predict(x_test)
 r2 = r2_score(y_test, y_predict)
 print('r2결과값: ' ,r2)
 
 mse = mean_squared_error(y_test,y_predict)
 print('mse : ', mse)
-
-def RMSE(y_test, y_predict):  #RMSE 함수정의
-    return np.sqrt(mean_squared_error(y_test,y_predict))  #np.sqrt하면 mse에 루트가 씌워짐
-
-rmse = RMSE(y_test, y_predict)
-
-print('RMSE : ', rmse) 
-
 
 # loss: 2726.558837890625
 # 11/11 ━━━━━━━━━━━━━━━━━━━━ 0s 4ms/step 

@@ -19,7 +19,7 @@ model.add(Dense(1))
 
 
 #3.컴파일, 훈련
-model.compile(loss='mse', optimizer = 'adam')
+model.compile(loss='mse', optimizer = 'adam')#학습을 시작하기 전 학습 환경을 설정하고 준비하는 단계입니다.
 model.fit(x,y, epochs=100, batch_size=3)#모델을 훈련하기위해서는 x,y가 필요하다. x,y를 넣어주고 epochs, batch_size를 설정해준다.
 
 #4.평가예측

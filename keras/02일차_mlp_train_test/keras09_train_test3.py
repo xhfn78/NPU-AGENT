@@ -9,6 +9,7 @@ from sklearn.model_selection import train_test_split
 x = np.array([1,2,3,4,5,6,7,8,9,10])
 y = np.array([1,2,3,4,5,6,7,8,9,10])
 
+
 x_train, x_test, y_train,y_test = train_test_split(
     x, y, 
     #train_size=0.7, #같이써도 상관없음,통상적으로 하나만써도됨
