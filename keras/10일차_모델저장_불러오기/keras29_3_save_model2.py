@@ -63,8 +63,7 @@ model.add(Dense(1))
 # model.summary()
 
 path = './_save/keras29/'  
-# model.save(path + 'keras29_1_save_model.keras') #모델 구조 + 가중치 통째로 저장
-
+model.save(path + 'keras29_1_save_model.keras') #모델 구조 + 가중치 통째로 저장
 # model = load_model(path + 'keras29_1_save_model.keras') #저장된 모델 불러오기
 model.summary()
 # exit()   # 여기서 프로그램을 끝낸다. 훈련 전 저장이 목적이라 아래 훈련 코드는 실행하지 않는다.

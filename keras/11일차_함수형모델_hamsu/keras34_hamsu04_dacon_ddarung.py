@@ -13,13 +13,18 @@ from tensorflow.keras.layers import Input, Dense, Dropout
 
 #1. 데이터
 path = './_data/ddarung/'      #<<< 상대경로 (윈도우/맥 어디서나 동작)
+
 # path = 'c:\study\_data\ddarung\'   #<<< 윈도우 절대경로. \ 두 개 써도 가능하지만 맥에서는 안 됨
 train_csv = pd.read_csv(path + 'train.csv', index_col=0).dropna()
 test_csv = pd.read_csv(path + 'test.csv', index_col=0).fillna(0)
 submission = pd.read_csv(path + 'submission.csv', index_col=0)
 x = train_csv.drop(columns='count')
 y = train_csv['count']
-x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.8, random_state=666)
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, 
+                                                    train_size=0.8,
+                                                    random_state=666
+                                                    )
 scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
