@@ -47,28 +47,55 @@ y_test = ohe.fit_transform(y_test)
 # exit()
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(64,(3,3),input_shape = (32,32,3)))  #  (26 ,26,64)
-                                   #(heigh,width,channel)
-model.add(Conv2D(filters=64, kernel_size=(3,3),activation='relu')) #(24,24,32)
+
+# =========================================
+# Block 1
+# 32x32x3 → 16x16x64
+# =========================================
+model.add(Conv2D(64,kernel_size=(3,3),padding='same',activation='relu',input_shape=(32,32,3)))
+model.add(Conv2D(64,kernel_size=(3,3),padding='same',activation='relu'))
 model.add(MaxPool2D(pool_size=(2,2)))
-model.add(Dropout(0.2))
-
-model.add(Conv2D(32,(3,3),activation='relu')) #(None, 23, 23, 32)
-model.add(Conv2D(32,(3,3),activation='relu')) #(None, 23, 23, 32)
-model.add(Dropout(0.2))
-
-model.add(Conv2D(32,(3,3),activation='relu')) #(None, 22, 22, 16)
-model.add(Conv2D(32,(3,3),activation='relu')) #(None, 22, 22, 16)
+# =========================================
+# Block 2
+# 16x16x64 → 8x8x128
+# =========================================
+model.add(Conv2D(128,(3,3),padding='same',activation='relu'))
+model.add(Conv2D(128,(3,3),padding='same',activation='relu'))
 model.add(MaxPool2D(pool_size=(2,2)))
-model.add(Dropout(0.2))
-
-model.add(Flatten())   #(None, 6400)
-
-model.add(Dense(units=32, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(units=16, activation='relu')) #아웃풋 node의 갯수= units
-model.add(Dense(100, activation='softmax'))#(None, 10) 
-model.summary()
+# =========================================
+# Block 3
+# 8x8x128 → 4x4x256
+# =========================================
+model.add(Conv2D(256,(3,3),padding='same',activation='relu'))
+model.add(Conv2D(256,(3,3),padding='same',activation='relu'))
+model.add(Conv2D(256,(3,3),padding='same',activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2)))
+# =========================================
+# Block 4
+# 4x4x256 → 2x2x512
+# =========================================
+model.add(Conv2D(512,(3,3),padding='same',activation='relu'))
+model.add(Conv2D(512,(3,3),padding='same',activation='relu'))
+model.add(Conv2D(512,(3,3),padding='same',activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2)))
+# =========================================
+# Block 5
+# 2x2x512 → 1x1x512
+# =========================================
+model.add(Conv2D(512,(3,3),padding='same',activation='relu'))
+model.add(Conv2D(512,(3,3),padding='same',activation='relu'))
+model.add(Conv2D(512,(3,3),padding='same',activation='relu'))
+model.add(MaxPool2D(pool_size=(2,2)))
+# =========================================
+# 분류기
+# =========================================
+model.add(Flatten())
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.5))
+# CIFAR-100 = 100개 클래스
+model.add(Dense(100, activation='softmax'))
 # exit()
 
 #3 컴파일,훈련
