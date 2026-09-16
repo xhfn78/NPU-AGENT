@@ -52,16 +52,7 @@ output1 = Dense(1)(dense5)
 model2 = Model(inputs=input1, outputs=output1)
 model2.summary()
 
-input1 = Input(shape=(10,))
-dense1 = Dense(3, name='ys1', activation='relu')(input1)
-drop1 = Dropout(0.2)(dense1)
-dense2 = Dense(10, name = 'ys2', activation='relu')(drop1)
-drop2 = Dropout(0.3)(dense2)
-dense3 = Dense(15, name='ys3',activation='relu')(drop2)
-drop3 = Dropout(0.5)(dense3)
-dense4 = Dense(20, name='ys3',activation='relu')(drop3)
-dense5 = Dense(10, name='ys3',activation='relu')(dense4)
-model2 =Model(inputs= input1, outpus=output1)
+
 #3. 컴파일, 훈련
 model2.compile(loss='mse', optimizer='adam')
 es = EarlyStopping(monitor='val_loss', mode='auto', patience=15, restore_best_weights=True)
