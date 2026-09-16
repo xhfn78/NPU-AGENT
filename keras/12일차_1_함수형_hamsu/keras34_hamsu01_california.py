@@ -99,7 +99,7 @@ Dropout 적용 후:
 # ============================================================
 #
 # 11. 기본 회귀 모델
-# 파일: keras11_1_califonia.py
+# 파일: keras11_1_california.py
 # 기존 주석 기록: loss = 0.6195971369743347
 # r2 / mse / RMSE: 당시 별도 기록 없음
 #
@@ -108,7 +108,7 @@ Dropout 적용 후:
 # 이 단계 결과: 미기록
 #
 # 17. validation_split 추가
-# 파일: keras17_val1_califonia.py
+# 파일: keras17_val1_california.py
 # 이 단계 결과: 미기록
 # 기존 loss 주석이 11번과 같아서 별도 훈련 결과인지 확인 필요
 #
@@ -123,7 +123,7 @@ Dropout 적용 후:
 # 기존 loss 주석이 11번과 같아서 별도 훈련 결과인지 확인 필요
 #
 # 27. MinMaxScaler 추가
-# 파일: keras27_scaler01_california.py
+# 파일: keras27_Scaler01_california.py
 # 기존 기록: loss = 0.5128337740898132
 # r2 = 0.5992407312496584 / mse = 0.5128339690484836 / RMSE = 0.716124269277674
 # EarlyStopping을 보완하기 전 기록이므로 현재 코드로 다시 실행한 결과는 아래에 기록
@@ -171,7 +171,7 @@ Dropout 적용 후:
 # EarlyStopping 보완 후 결과도 새로 기록 필요
 #
 # 29-6. 훈련한 가중치를 불러와 평가
-# 파일: keras29_6_save_weights.py
+# 파일: keras29_6_load_weights.py
 # 이 단계 결과: 미기록 (기존 Scaler 수치는 28번과 동일)
 # 29-5 저장 전 결과와 비교. 다시 훈련하지 않음
 #
@@ -180,7 +180,7 @@ Dropout 적용 후:
 # 이 파일 자체의 새 결과: 미기록 (기존 Scaler 수치는 28번과 동일)
 #
 # 30-2. 체크포인트를 불러와 평가
-# 파일: keras30_ModelCheckPoint2.py
+# 파일: keras30_ModelCheckPoint2_load.py
 # 이 파일의 기존 주석에서 저장 / 복원 결과를 함께 기록한 수치
 # 저장한 값: r2 = 0.7631599338241124 / mse = 0.3030737917688708 / RMSE = 0.5505213817544881
 # 불러온 값: r2 = 0.7631599338241124 / mse = 0.3030737917688708 / RMSE = 0.5505213817544881

@@ -82,7 +82,7 @@ print('RMSE : ', rmse)
 # ============================================================
 #
 # 11. 기본 회귀 모델
-# 파일: keras11_1_califonia.py
+# 파일: keras11_1_california.py
 # 기존 주석 기록: loss = 0.6195971369743347
 # r2 / mse / RMSE: 당시 별도 기록 없음
 #
@@ -91,7 +91,7 @@ print('RMSE : ', rmse)
 # 이 단계 결과: 미기록
 #
 # 17. validation_split 추가
-# 파일: keras17_val1_califonia.py
+# 파일: keras17_val1_california.py
 # 이 단계 결과: 미기록
 # 기존 loss 주석이 11번과 같아서 별도 훈련 결과인지 확인 필요
 #

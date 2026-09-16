@@ -229,7 +229,7 @@ print('RMSE : ', rmse)
 # ============================================================
 #
 # 11. 기본 회귀 모델
-# 파일: keras11_1_califonia.py
+# 파일: keras11_1_california.py
 # 기존 주석 기록: loss = 0.6195971369743347
 # r2 / mse / RMSE: 당시 별도 기록 없음
 #
@@ -238,7 +238,7 @@ print('RMSE : ', rmse)
 # 이 단계 결과: 미기록
 #
 # 17. validation_split 추가
-# 파일: keras17_val1_califonia.py
+# 파일: keras17_val1_california.py
 # 이 단계 결과: 미기록
 # 기존 loss 주석이 11번과 같아서 별도 훈련 결과인지 확인 필요
 #
@@ -253,7 +253,7 @@ print('RMSE : ', rmse)
 # 기존 loss 주석이 11번과 같아서 별도 훈련 결과인지 확인 필요
 #
 # 27. MinMaxScaler 추가
-# 파일: keras27_scaler01_california.py
+# 파일: keras27_Scaler01_california.py
 # 기존 기록: loss = 0.5128337740898132
 # r2 = 0.5992407312496584 / mse = 0.5128339690484836 / RMSE = 0.716124269277674
 # EarlyStopping을 보완하기 전 기록이므로 현재 코드로 다시 실행한 결과는 아래에 기록

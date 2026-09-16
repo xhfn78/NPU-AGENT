@@ -145,7 +145,7 @@ print('RMSE : ', rmse)
 # import matplotlib.pyplot as plt
 # import platform
 # 한글 깨짐 방지. 윈도우는 맑은 고딕, 맥은 AppleGothic을 써야 한다.
-plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')
+# plt.rc('font', family='Malgun Gothic' if platform.system()=='Windows' else 'AppleGothic')
 # plt.rcParams['axes.unicode_minus'] = False #마이너스 숫자나올떄 깨짐방지
 # plt.figure(figsize=(9,6))
 # plt.plot(hist.history['loss'][2:] ,c='red', label='loss') #y값만 넣으면 시간순으로 그려줌.
