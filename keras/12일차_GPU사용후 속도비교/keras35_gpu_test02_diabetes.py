@@ -88,18 +88,18 @@ model.add(Dense(1,))
 #3. 컴파일, 훈련
 model.compile(loss='mse', optimizer= 'adam')
 start_time = time.time()
-from tensorflow.keras.callbacks import EarlyStopping
-es = EarlyStopping(
-    monitor= 'val_loss',
-    mode='auto',
-    patience=15,
-    restore_best_weights=True
-)
+# from tensorflow.keras.callbacks import EarlyStopping
+# es = EarlyStopping(
+#     monitor= 'val_loss',
+#     mode='auto',
+#     patience=15,
+#     restore_best_weights=True
+# )
 hist = model.fit(x_train,y_train, 
                  epochs=100, 
                  batch_size=10 ,
                  validation_split=0.2,
-                 callbacks =[es]
+                #  callbacks =[es]
                  )
 
 end_time = time.time()
