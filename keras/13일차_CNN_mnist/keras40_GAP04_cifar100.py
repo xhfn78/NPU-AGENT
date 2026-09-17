@@ -173,7 +173,7 @@ acc:  0.4120999872684479
 accuracy_score :  0.4121
 걸린시간 : 812.73 초
 
-
+model.add(GlobalAveragePooling2D())  추가후 변화
 loss:  2.0546157360076904
 acc:  0.46889999508857727
 accuracy_score :  0.4689
