@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.layers import Dense, Dropout,MaxPool2D,Conv2D,GlobalAveragePooling2D
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 path = './_save/keras30/'
@@ -22,18 +22,16 @@ x_train, x_test, y_train, y_test = train_test_split(
 scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
-
+x_train = x_train.reshape(-1,10,3,1) #(455, 30) (114, 30)
+x_test= x_test.reshape(-1,10,3,1)
+print(x_train.shape,x_test.shape)
+# exit()
 #2. 모델구성
 model = Sequential()
-model.add(Dense(30, input_dim=30, activation='relu'))
-# Dropout이란?
-#   훈련할 때마다 그 층의 뉴런 일부를 무작위로 꺼버린다. Dropout(0.2)면 20%를 끈다.
-#   특정 뉴런에만 의존하지 못하게 만들어서 과적합을 줄이는 것이 목적이다.
-#
-#   중요: 훈련(fit)할 때만 끄고, 평가(evaluate)와 예측(predict)에서는 전부 켠다.
-#         그래서 val_loss가 train loss보다 오히려 좋게 나오기도 한다.
-#   비율을 너무 크게 잡으면(0.5 이상) 학습 자체가 잘 안 될 수 있다.
-model.add(Dropout(0.2))
+model.add(Conv2D(64,(2,2), input_shape=(10,3,1,),padding='same', activation='relu'))
+model.add(Conv2D(64,(2,2), padding='same', activation='relu'))
+model.add(Conv2D(32,(2,2), padding='same', activation='relu'))
+model.add(GlobalAveragePooling2D())
 model.add(Dense(60, activation='relu'))
 model.add(Dropout(0.3))
 model.add(Dense(70, activation='relu'))
@@ -42,7 +40,8 @@ model.add(Dense(80, activation='relu'))
 model.add(Dense(60, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(1, activation='sigmoid'))
-
+model.summary()
+exit()
 #3. 컴파일, 훈련
 model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 es = EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True, verbose=1)

@@ -27,7 +27,11 @@ x_train, x_test, y_train, y_test = train_test_split(
 scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
-
+print(x_train.shape,x_test.shape)
+# x_train = x_train.reshape(-1,10,3,1) #(455, 30) (114, 30)
+# x_test= x_test.reshape(-1,10,3,1)
+print(x_train.shape,x_test.shape)
+exit()
 #2. 모델구성
 model = Sequential()
 model.add(Dense(100, input_dim=200, activation='relu'))
