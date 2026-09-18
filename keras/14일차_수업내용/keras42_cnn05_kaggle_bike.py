@@ -26,9 +26,9 @@ x_test = scaler.transform(x_test)
 
 # x_train = x_train.reshape()
 
-x_train =x_train.reshape(-1,4,2,1)  
+x_train =x_train.reshape(-1,4,2,1)
 x_test = x_test.reshape(-1,4,4,1)
-print(x_train.shape,y_train.shape) 
+print(x_train.shape,y_train.shape)
 # x_train =x_train.reshape(-1,3,3,1)  #(8708, 2, 2, 2) (8708,)
 # x_test = x_test.reshape(-1,3,3,1)
 # exit()

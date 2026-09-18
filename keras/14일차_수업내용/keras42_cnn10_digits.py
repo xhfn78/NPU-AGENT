@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Sequential, Model
-from tensorflow.keras.layers import Input, Dense, Dropout
+from tensorflow.keras.layers import Input, Dense, Dropout,GlobalAveragePooling2D,Conv2D
 from tensorflow.keras.callbacks import EarlyStopping
 
 #1. 데이터
@@ -24,39 +24,47 @@ scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
+# x_train =x_train.reshape(-1,3,3,1)  #(1062, 9) (1062,)
+# x_test = x_test.reshape(-1,3,3,1)
+print(x_train.shape,y_train.shape) #(1437, 64) (1437, 10)
+x_train =x_train.reshape(-1,64,1,1)  #(1062, 9) (1062,)
+x_test = x_test.reshape(-1,6,6,2)
+print(x_train.shape,y_train.shape) #(331, 10) (331,)
+# exit()
+
+
 #2. 모델구성
 # 2-1. 순차형 모델 (지금까지 쓰던 방식)
 model = Sequential()
-model.add(Dense(30, input_dim=64, activation='relu'))
-model.add(Dropout(0.2))
-model.add(Dense(50, activation='relu'))
-model.add(Dropout(0.3))
-model.add(Dense(100, activation='relu'))
+model.add(Conv2D(64,(2,2), input_shape=(64,1,1,), padding='same' ,activation='relu'))
+model.add(Conv2D(64,(2,2),  padding='same' ,activation='relu'))
+model.add(Conv2D(64 ,(2,2),padding='same'))
+model.add(GlobalAveragePooling2D())
+model.add(Dense(10,activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(50, activation='relu'))
-model.add(Dense(30, activation='relu'))
-model.add(Dense(10, activation='softmax'))
+model.add(Dense(5,activation='relu'))
+model.add(Dense(1))
 model.summary()
 
 # 2-2. 함수형 모델
 # 함수형은 층을 변수에 담고 괄호로 이어 붙인다.
 #   dense1 = Dense(30)(input1)   ← input1을 이 층에 통과시킨다는 뜻
 # 위의 순차형과 층 구성이 완전히 같으므로 summary 결과도 같다. 적는 방식만 다르다.
-input1 = Input(shape=(64,))
-dense1 = Dense(30, name='ys1', activation='relu')(input1)
-drop1 = Dropout(0.2)(dense1)
-dense2 = Dense(50, name='ys2', activation='relu')(drop1)
-drop2 = Dropout(0.3)(dense2)
-dense3 = Dense(100, activation='relu')(drop2)
-drop3 = Dropout(0.5)(dense3)
-dense4 = Dense(50, activation='relu')(drop3)
-dense5 = Dense(30, activation='relu')(dense4)
-output1 = Dense(10, activation='softmax')(dense5)
-model2 = Model(inputs=input1, outputs=output1)
-model2.summary()
+# input1 = Input(shape=(64,))
+# dense1 = Dense(30, name='ys1', activation='relu')(input1)
+# drop1 = Dropout(0.2)(dense1)
+# dense2 = Dense(50, name='ys2', activation='relu')(drop1)
+# drop2 = Dropout(0.3)(dense2)
+# dense3 = Dense(100, activation='relu')(drop2)
+# drop3 = Dropout(0.5)(dense3)
+# dense4 = Dense(50, activation='relu')(drop3)
+# dense5 = Dense(30, activation='relu')(dense4)
+# output1 = Dense(10, activation='softmax')(dense5)
+# model2 = Model(inputs=input1, outputs=output1)
+# model2.summary()
 
 #3. 컴파일, 훈련
-model2.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 es = EarlyStopping(monitor='val_loss', mode='auto', patience=200, restore_best_weights=True)
 from tensorflow.keras.callbacks import ModelCheckpoint
 mcp = ModelCheckpoint(
@@ -66,11 +74,11 @@ mcp = ModelCheckpoint(
     filepath='./_save/keras30/keras34_hamsu10_digits.keras',
     verbose=1,
 )
-model2.fit(x_train, y_train, epochs=500, batch_size=300, validation_split=0.3, callbacks=[es, mcp], verbose=1)
+model.fit(x_train, y_train, epochs=500, batch_size=300, validation_split=0.3, callbacks=[es, mcp], verbose=1)
 
 #4. 평가, 예측
-result = model2.evaluate(x_test, y_test)
-y_predict = np.argmax(model2.predict(x_test), axis=1)
+result = model.evaluate(x_test, y_test)
+y_predict = np.argmax(model.predict(x_test), axis=1)
 y_actual = np.argmax(y_test, axis=1)
 print('loss:', result[0])
 print('acc:', result[1])

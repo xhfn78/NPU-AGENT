@@ -8,7 +8,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import RobustScaler
 from sklearn.metrics import accuracy_score
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
+from tensorflow.keras.layers import Dense, Dropout,GlobalAveragePooling2D,Conv2D
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.utils import to_categorical
 
@@ -26,24 +26,24 @@ scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
+# x_train =x_train.reshape(-1,3,3,1)  #(1062, 9) (1062,)
+# x_test = x_test.reshape(-1,3,3,1)
+print(x_train.shape,y_train.shape) #(331, 10) (331,)
+# x_train =x_train.reshape(-1,3,3,1)  #(1062, 9) (1062,)
+# x_test = x_test.reshape(-1,3,3,1)
+print(x_train.shape,y_train.shape) #(331, 10) (331,)
+exit()
+
+
 #2. 모델구성
 model = Sequential()
-model.add(Dense(10, input_dim=13, activation='relu'))
-# Dropout이란?
-#   훈련할 때마다 그 층의 뉴런 일부를 무작위로 꺼버린다. Dropout(0.2)면 20%를 끈다.
-#   특정 뉴런에만 의존하지 못하게 만들어서 과적합을 줄이는 것이 목적이다.
-#
-#   중요: 훈련(fit)할 때만 끄고, 평가(evaluate)와 예측(predict)에서는 전부 켠다.
-#         그래서 val_loss가 train loss보다 오히려 좋게 나오기도 한다.
-#   비율을 너무 크게 잡으면(0.5 이상) 학습 자체가 잘 안 될 수 있다.
-model.add(Dropout(0.2))
-model.add(Dense(20, activation='relu'))
-model.add(Dropout(0.3))
-model.add(Dense(30, activation='relu'))
+model.add(Conv2D(8,(2,1), input_shape=(3,3,1,), padding='same' ,activation='relu'))
+model.add(GlobalAveragePooling2D())
+model.add(Dense(10,activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(40, activation='relu'))
-model.add(Dense(30, activation='relu'))
-model.add(Dense(3, activation='softmax'))
+model.add(Dense(5,activation='relu'))
+model.add(Dense(1))
+model.summary()
 
 #3. 컴파일, 훈련
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])

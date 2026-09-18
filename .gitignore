@@ -2,3 +2,15 @@
 .vscode
 ._data
 ._save
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.webp
+*.npy
+*.zip
+*.DS_Store
+_data/archive/
+_data/image/
+_data/kaggle_cat_dog_npy/
