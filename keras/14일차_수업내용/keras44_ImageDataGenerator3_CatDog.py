@@ -104,6 +104,10 @@ model.fit(x_train,y_train,
           )
 end_time = time.time()
 
+path = './_save/cat_dog/'  
+# model.save(path + 'keras29_1_save_model.keras') #모델 구조 + 가중치 통째로 저장
+model.save_weights(path + 'catdog_save_1.weights.h5') #가중치 세이브
+
 #평가예측
 print(('=====================model.evaluate=================='))
 loss = model.evaluate(x_test,y_test)

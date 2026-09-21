@@ -67,24 +67,24 @@ y_test = np.load(np_path + 'keras45_03_y_test.npy',)
 #2. 모델구성
 
 model = Sequential()
-model.add(Conv2D(32, (2,2), input_shape=(190,190,3,),activation='relu',))
+model.add(Conv2D(32, (5,5), input_shape=(160,160,3,),activation='relu',))
 model.add(MaxPool2D(2,2))
 
-model.add(Conv2D(64, (2,2), activation='relu',))
+model.add(Conv2D(64, (5,5), activation='relu',))
 model.add(MaxPool2D(2,2))
 
-model.add(Conv2D(128, (2,2), activation='relu',))
+model.add(Conv2D(128, (3,3), activation='relu',))
 model.add(MaxPool2D(2,2))
 
 model.add(Conv2D(256, (2,2), activation='relu',))
 model.add(MaxPool2D(2,2))
 
-model.add(Flatten())
+model.add(GlobalAveragePooling2D())
 # model.add(Dropout(0.2))
 model.add(Dense(units=128,activation='relu'))
-# model.add(Dropout(0.2))
-# model.add(Dense(16,activation='relu'))
-# model.add(Dropout(0.2))
+model.add(Dropout(0.2))
+model.add(Dense(16,activation='relu'))
+model.add(Dropout(0.2))
 model.add(Dense(1,activation='sigmoid'))
 model.summary()
 
@@ -97,18 +97,21 @@ model.compile(loss='binary_crossentropy',
 es = EarlyStopping(
     monitor='val_loss',
     mode='auto',
-    patience=20,
+    patience=30,
     restore_best_weights=True,
 )
 start_time = time.time()
 model.fit(x_train,y_train,
-          epochs=100,
+          epochs=1000,
           batch_size=8,
           verbose=1,
           validation_split =0.2,
           callbacks =[es,],
           )
 end_time = time.time()
+path = './_save/cat_dog/'  
+# model.save(path + 'keras29_1_save_model.keras') #모델 구조 + 가중치 통째로 저장
+model.save(path + 'catdog_save_1.keras') #모델 세이브
 
 #평가예측
 print(('=====================model.evaluate=================='))

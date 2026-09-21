@@ -30,8 +30,8 @@ path_test = './_data/image/cat_dog/test_set/'
 
 xy_train = train_datagen.flow_from_directory(  
     path_train, #경로
-    target_size=(190,190),  #이미지를 크기를 (100,100)으로 만들어줌 원하는 크기 가능!
-    batch_size=10000,
+    target_size=(160,160),  #이미지를 크기를 (100,100)으로 만들어줌 원하는 크기 가능!
+    batch_size=4000,
     class_mode='binary',  #이진분류
     color_mode='rgb', #흑백
     shuffle=True,
@@ -39,8 +39,8 @@ xy_train = train_datagen.flow_from_directory(
 #Found 160 images belonging to 2 classes.
 xy_test = test_datagen.flow_from_directory(
     path_test,
-    target_size=(190,190),  #이미지를 크기를 (100,100)으로 만들어줌 원하는 크기 가능!
-    batch_size=10000,
+    target_size=(160,160),  #이미지를 크기를 (100,100)으로 만들어줌 원하는 크기 가능!
+    batch_size=1000,
     class_mode='binary',  #이진분류
     color_mode='rgb', #흑백
     shuffle=False,  # 테스트에서는 필요없음
@@ -65,24 +65,25 @@ exit()
 #2. 모델구성
 
 model = Sequential()
-model.add(Conv2D(32, (2,2), input_shape=(200,200,3,),activation='relu',))
+model.add(Conv2D(32, (5,5), input_shape=(160,160,3,),activation='relu',))
 model.add(MaxPool2D(2,2))
 
-model.add(Conv2D(64, (2,2), activation='relu',))
+model.add(Conv2D(64, (4,4), activation='relu',))
 model.add(MaxPool2D(2,2))
 
-model.add(Conv2D(128, (2,2), activation='relu',))
+model.add(Conv2D(128, (3,3), activation='relu',))
 model.add(MaxPool2D(2,2))
 
 model.add(Conv2D(256, (2,2), activation='relu',))
 model.add(MaxPool2D(2,2))
 
-model.add(Conv2D(512, (2,2), activation='relu',))
-model.add(MaxPool2D(2,2))
-model.add(Flatten())
+# model.add(Conv2D(512, (2,2), activation='relu',))
+# model.add(MaxPool2D(2,2))
+model.add(GlobalAveragePooling2D())
+# model.add(Flatten())
 # model.add(Dropout(0.2))
 model.add(Dense(units=130,activation='relu'))
-# model.add(Dropout(0.2))
+model.add(Dropout(0.2))
 # model.add(Dense(16,activation='relu'))
 # model.add(Dropout(0.2))
 model.add(Dense(1,activation='sigmoid'))
