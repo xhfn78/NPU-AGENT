@@ -43,10 +43,10 @@ datagen = ImageDataGenerator(
 it = datagen.flow(arr,  #arr을 datagen속 파라미터 들을 배치 사이즈 만큼 랜덤 적용 현재 1번 
              batch_size=1,
              )
-# print(it)  # 이터레이터= 리스트랑 비슷하다
+# print(it)  # 이터레이터 = 리스트랑 비슷하다
 
 # print(it.next()) #파이썬 3.10까지, 이렇게씀
-# print(next(it).shape) #파이썬 3.11이후 
+# print(nex t(it).shape) #파이썬 3.11이후 
 
 
 fig,ax = plt.subplots(nrows=1, ncols=5, figsize=(5,5))

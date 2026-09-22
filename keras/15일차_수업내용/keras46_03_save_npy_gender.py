@@ -10,6 +10,9 @@ from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import RobustScaler
 #1.데이터
+
+start_time =time.time()
+
 train_datagen = ImageDataGenerator(
     rescale=1./255,
     # horizontal_flip=True,  #수평 뒤집기,
@@ -21,10 +24,6 @@ train_datagen = ImageDataGenerator(
     # shear_range=0.7, #좌표하나를 고정하고 다른 몇개의 좌표로 이동(한마디로 찌부)
     # fill_mode='neareet',
 )
-
-
-
-
 path_data = './_data/image/faces/'  # train속 ad와 normal은 라벨링해줌
 
 
@@ -39,7 +38,12 @@ xy_train = train_datagen.flow_from_directory(
 
 
 # print(xy_train.class_indices)
-x_train,x_test, y_train, y_test = train_test_split(xy_train[0][0], xy_train[0][1], train_size=0.8, random_state=666, stratify=xy_train[0][1],)
+x_train,x_test, y_train, y_test = train_test_split(xy_train[0][0], 
+                                                   xy_train[0][1], 
+                                                   train_size=0.8, 
+                                                   random_state=666, 
+                                                #    stratify=xy_train[0][1],
+                                                   )
 # scaler = RobustScaler()
 # x_train = scaler.fit_transform(x_train)
 # x_test = scaler.transform(x_test)
@@ -50,3 +54,6 @@ np.save(np_path + 'faces_01_x_train.npy', arr = x_train)
 np.save(np_path + 'faces_01_y_train.npy', arr = y_train) 
 np.save(np_path + 'faces_01_x_test.npy', arr = x_test) 
 np.save(np_path + 'faces_01_y_test.npy', arr = y_test) 
+end_time =time.time()
+
+print('걸린시간round',(end_time-start_time),'초')
