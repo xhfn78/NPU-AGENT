@@ -63,7 +63,6 @@ xy_augmented = datagen.flow(
     shuffle=False,
 ).next()[0]
 
-
 print(x_augmented.shape) # (40000, 28, 28, 1)
 print(x_train.shape)
 # exit()
@@ -139,8 +138,18 @@ acc_score = accuracy_score(y_test,y_pred)
 print('accuracy_score : ', acc_score)
 print('걸린시간 :',round(end_time-start_time,2),'초')
 
-
+'''
 # ==============================
 # loss: 0.24654521048069
 # acc: 0.9017
 # =========================
+
+데이터 증폭후 
+loss: 0.4108351767063141
+acc: 0.9356
+==============================
+accuracy_score :  0.9355907250644093
+걸린시간 : 3082.16 초
+
+
+'''

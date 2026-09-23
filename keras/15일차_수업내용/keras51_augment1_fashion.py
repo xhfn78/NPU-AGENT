@@ -135,7 +135,7 @@ es = EarlyStopping(
 start_time = time.time()
 model.fit(x_train,y_train,
           epochs=1000,
-          batch_size=256,
+          batch_size=512,
           verbose=2,
           validation_split =0.2,
           callbacks =[es,],
@@ -179,5 +179,12 @@ acc:  0.9117000102996826
 accuracy_score :  0.9117
 걸린시간 : 364.06 초
 
+
+313/313 [==============================] - 1s 2ms/step - loss: 0.4360 - acc: 0.9168
+loss:  0.4360130727291107
+acc:  0.9168000221252441
+313/313 [==============================] - 0s 1ms/step
+accuracy_score :  0.9168
+걸린시간 : 690.52 초
 
 '''

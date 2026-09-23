@@ -31,7 +31,13 @@ datagen = ImageDataGenerator(
     fill_mode='nearest',
 )
 
-augment_size = 100   
+augment_size = 40000  
+randidx = np.random.choice(x_train.shape[0], size=augment_size,replace=True) #60000개중 40000개 랜덤뽑기
+
+
+x_augmented = x_train[randidx].copy()
+y_augmented = y_train[randidx].copy()
+
 print(x_train.shape)    #(60000, 28, 28)
 print(x_train[0].shape) #(28, 28)
 
@@ -42,10 +48,19 @@ xy_data = datagen.flow(
         np.tile(x_train[0].reshape(28*28),augment_size).reshape(-1,28,28,1),
         np.zeros(augment_size),
         batch_size=augment_size,
-        shuffle=False,
+        shuffle=False,      
 
-).next()
+).next()[0]
 
+
+print(x_augmented.shape) # (40000, 28, 28, 1)
+print(x_train.shape)
+# exit()
+x_train = x_train.reshape(-1,28,28,1)
+x_test = x_test.reshape(-1,28,28,1)
+
+x_train = np.concatenate((x_train,x_augmented))
+y_train = np.concatenate((y_train,y_augmented))
 #######################원한 인코더###########################
 from sklearn.preprocessing import OneHotEncoder
 ohe = OneHotEncoder(sparse_output=False)
@@ -54,15 +69,15 @@ y_test = y_test.reshape(-1,1)
 y_train = ohe.fit_transform(y_train)
 y_test = ohe.fit_transform(y_test)
 
-# print(y_train.shape,y_test.shape)  #(60000, 10) (10000, 10)
+print(y_train.shape,y_test.shape)  #(60000, 10) (10000, 10)
 
 #2. 모델구성
 model = Sequential()
-model.add(Conv2D(64,(3,3),input_shape = (28,28,1)))  #  (26 ,26,64)
-model.add(Conv2D(filters=32, kernel_size=(3,3),activation='relu',padding='same')) #(24,24,32)
+model.add(Conv2D(64,(3,3),input_shape = (28,28,1)))  
+model.add(Conv2D(filters=32, kernel_size=(3,3),activation='relu',padding='same')) 
 model.add(MaxPool2D(2,2))
 model.add(Dropout(0.2))
-model.add(Conv2D(64,(2,2),padding='same',activation='relu')) #(None, 23, 23, 32)
+model.add(Conv2D(64,(2,2),padding='same',activation='relu'))
 model.add(Conv2D(32,(2,2),activation='relu')) #(None, 22, 22, 16)
 model.add(MaxPool2D(2,2))
 model.add(Dropout(0.2))
