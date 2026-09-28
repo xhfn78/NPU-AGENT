@@ -88,7 +88,8 @@ model.add(Dense(1,))
 #3. 컴파일, 훈련
 from tensorflow.keras.optimizers import Adam
 # learning_rate = 0.01
-learning_rate = 0.001  #디폴트 
+learning_rate = 0.00
+1  #디폴트 
 # learning_rate = 0.0001
 # learning_rate = 0.005
 # learning_rate = 0.05

@@ -1,6 +1,6 @@
 import numpy as np
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense,SimpleRNN,Dropout,LSTM
+from tensorflow.keras.layers import Dense,SimpleRNN,Dropout,LSTM,GRU
 
 #1데이터
 
@@ -22,17 +22,19 @@ x =  x.reshape(x.shape[0],x.shape[1],1)
 
 model =Sequential()
 # model.add(SimpleRNN(units=10, input_shape = (3,1)))
-model.add(LSTM(units=10, input_length=3, input_dim=1))
+# model.add(LSTM(units=10, input_length=3, input_dim=1))
+model.add(GRU(units=10, input_length=3, input_dim=1))
 #3차원으로 들어가서 2(1)차원으로 나옴-> 바로 Dense와 연결가능 
 model.add(Dense(8, activation='relu'))
 model.add(Dense(1,activation='linear'))
+model.summary()
+exit()
 
 #3.컴파일,훈련
 
 model.compile(loss = 'mse',optimizer = 'adam')
 model.fit(x,y,epochs=500)
-model.summary()
-exit()
+# exit()
 
 #4.평가,예측
 
