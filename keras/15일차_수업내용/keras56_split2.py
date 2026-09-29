@@ -33,39 +33,7 @@ y = bbb[ :,-1, 1]
 
 
 # print('==================================')
-
-# print(x)
-'''
-[[[1 9]
-  [2 8]
-  [3 7]
-  [4 6]]
-
- [[2 8]
-  [3 7]
-  [4 6]
-  [5 5]]
-
- [[3 7]
-  [4 6]
-  [5 5]
-  [6 4]]
-
- [[4 6]
-  [5 5]
-  [6 4]
-  [7 3]]
-
- [[5 5]
-  [6 4]
-  [7 3]
-  [8 2]]
-
- [[6 4]
-  [7 3]
-  [8 2]
-  [9 1]]]
-'''
+#print(x)
 # print('==================================')
 # print(y) #[5 4 3 2 1 0]
 # print('==================================')
@@ -80,10 +48,8 @@ y = bbb[ :,-1, 1]
 # exit()
 #2모델구성
 model = Sequential()
-model.add(LSTM(units=64, input_length=4, input_dim=2))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(128, activation='relu'))
+model.add(LSTM(units=5, input_shape=(4,2),return_sequences=True))
+model.add(LSTM(units=10,return_sequences=True))
 model.add(Dense(64, activation='relu'))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(1))

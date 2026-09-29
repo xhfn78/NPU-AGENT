@@ -18,22 +18,19 @@ def split_x(dataset,size):
 
 bbb = split_x (a , size)
 
-# print(bbb)
-# print(bbb.shape)
+print(bbb)
+print(bbb.shape)
 
 x = bbb[:,:-1]
 y = bbb[ :,-1]
 
-# print(x,y)
-# exit()
+print(x.shape,y.shape)
+
 
 #2모델구성
 model = Sequential()
-model.add(LSTM(units=512, input_length=4, input_dim=1))
+model.add(LSTM(units=32, input_length=4, input_dim=1,return_sequencs=True,))
 model.add(Dense(32, activation='relu'))
-model.add(Dense(64, activation='relu'))
-model.add(Dense(128, activation='relu'))
-model.add(Dense(64, activation='relu'))
 model.add(Dense(16, activation='relu'))
 model.add(Dense(1))
 
