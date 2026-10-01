@@ -74,9 +74,14 @@ model.fit(x_train,y_train,
           batch_size=1000,
           validation_split=0.2,
           callbacks=[es,lr],
-          verbose=2,
+          verbose=1,
           )
 end_time = time.time()
+
+# 훈련이 끝난 모델의 가중치만 저장한다.
+save_path = './_save/keras59_bidirectional_tdew.weights.h5'
+model.save_weights(save_path)
+print('가중치 저장 완료:', save_path)
 
 #4.평가,예측
 # 훈련에 쓰지 않은 시험 데이터로 loss를 확인한다.
@@ -86,6 +91,7 @@ print('test RMSE:', np.sqrt(results))
 print('걸린시간:', round(end_time-start_time,2), '초')
 
 # 마지막 144개 바로 앞의 데이터를 넣어 Tdew 값 144개를 예측한다.
+
 y_predict = model.predict(x_predict)
 
 # 예측한 144개와 실제 144개의 차이를 RMSE로 확인한다.
@@ -96,3 +102,17 @@ print('마지막 144개 RMSE:', np.sqrt(np.mean((y_cor.reshape(1,144)-y_predict)
 submit = pd.DataFrame(y_predict.reshape(-1), columns=['Tdew (degC)'])
 submit.to_csv(np_path + 'keras59_jena_tdew_submit.csv', index=False)
 print('submit 저장 완료:', np_path + 'keras59_jena_tdew_submit.csv')
+
+np_path = './_data/kaggle_jena_npy/'
+# 앞 파일에서 저장한 훈련용 x, y와 마지막 144개 예측용 데이터를 불러온다.
+x = np.load(np_path + 'keras58_01_tdew_x.npy')
+y = np.load(np_path + 'keras58_01_tdew_y.npy')
+x_predict = np.load(np_path + 'keras58_01_tdew_x_predict.npy')
+y_cor = np.load(np_path + 'keras58_01_tdew_y_cor.npy')
+
+#  loss: 0.0649
+# loss: 0.06485768407583237
+# test RMSE: 0.2546717182488711
+# 걸린시간: 12854.19 초
+# 1/1 [==============================] - 0s 380ms/step
+# 마지막 144개 RMSE: 4.7671866

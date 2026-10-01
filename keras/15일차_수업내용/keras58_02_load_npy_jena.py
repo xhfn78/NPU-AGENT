@@ -67,14 +67,15 @@ lr = ReduceLROnPlateau(
 
 model.compile(loss='mse', 
             optimizer='adam',
+            metrics=['acc'],
             )  
 
 start_time = time.time()
 model.fit(x_train,y_train,
-          epochs=500,
-          batch_size=8000,
+          epochs=300,
+          batch_size=2000,
           validation_split=0.2,
-        #   callbacks=[es,lr],
+          callbacks=[es,lr],
           verbose=1,
           )
 end_time = time.time()
@@ -104,3 +105,13 @@ submit['wd (deg)'] = y_predict.reshape(-1)
 # 날짜와 다른 열도 함께 CSV에 저장한다.
 submit.to_csv(np_path + 'keras58_jena_submit.csv')
 print('submit 저장 완료:', np_path + 'keras58_jena_submit.csv')
+
+
+'''
+- acc: 0.0840
+loss: [0.9203147292137146, 0.08396648615598679]
+걸린시간: 1759.81 초
+1/1 [==============================] - 0s 255ms/step
+마지막 144개 RMSE: 4.394194
+submit 저장 완료: ./_data/kaggle_jena_npy/keras58_jena_submit.csv
+'''
