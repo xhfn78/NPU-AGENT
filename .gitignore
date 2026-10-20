@@ -15,3 +15,5 @@ _data/archive/
 _data/image/
 _data/kaggle_cat_dog_npy/
 .env
+__pycache__/
+*.py[cod]
