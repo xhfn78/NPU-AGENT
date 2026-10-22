@@ -49,6 +49,8 @@ from typing import Annotated,TypedDict
 from langgraph.graph import StateGraph,START,END
 from langgraph.graph.message import add_messages  #리듀서
 from langgraph.prebuilt import ToolNode,tools_condition
+#메모리 추가 첫번째
+from langgraph.checkpoint.memory import InMemorySaver
 
 #################1. state 정의###############
 class State(TypedDict):
@@ -85,31 +87,34 @@ graph_builder.add_conditional_edges( #.add_conditional_edges>>>조건문 노드 
 graph_builder.add_edge('tools','chatbot')
 
 ################5.컴파일 #####################
-graph = graph_builder.compile()
+
+#메모리 추가 두번째 
+memory = InMemorySaver()
 
 
-################6.그래프 실행#################
-query = '삼성전자의 내일 주가 알려줘'
-
-response = graph.invoke({
-    'messages' : [('user',query)]
-})
-
-# print('AI :', response['messages'][-1].content)
+graph = graph_builder.compile(checkpointer=memory)
 
 
-#########################################################
-#그래프 이미지 저장
-#########################################################
-path = './_save/image/'
+#################6.그래프 실행#################
 
-png_data = graph.get_graph().draw_mermaid_png()
+#메모리 추가 세번째 
+config = {'configurable': {'thread_id': 'user01'}}
 
-with open(path + 'lg07_ToolNode.png','wb') as file:
-    file.write(png_data)
+# 첫번쨰 질문 
+response = graph.invoke(
+    {'messages':[('user','내 이름은 자비스야')]},
+    config=config
+    )
 
-#with 문 풀어서 아래에 적은 내용 이렇게 동작함 
-# file = open(path +'lg07_ToolNode.png','wb')
-# file.write(png_data)
-# file.close()
-#_save 폴더밑에 imgae 파일 만들고 위에 코드 실행 graph 이미지생김
+print(response['messages'][-1].content)
+
+print('=================두번쨰 질문===================')
+
+#두번째 질문
+response = graph.invoke(
+    {'messages':[('user','내 이름이 뭐라고했지?')]},
+    config=config
+    )
+
+
+print(response['messages'][-1].content)

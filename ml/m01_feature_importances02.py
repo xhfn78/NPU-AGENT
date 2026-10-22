@@ -1,0 +1,49 @@
+from sklearn.datasets import load_diabetes
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor,GradientBoostingRegressor
+from xgboost import XGBRegressor
+
+#1 데이터
+
+x,y = load_diabetes(return_X_y=True)#이렇게 하면 바로 xy 분리됨 사이킷런 데이터 한정
+
+print(x.shape,y.shape)
+
+random_state = 115
+
+from sklearn.model_selection import train_test_split
+
+x_train,x_test,y_train,y_test = train_test_split(x,y,
+    train_size=0.8,
+)
+
+#2.모델구성
+
+model1= DecisionTreeRegressor(random_state=random_state)
+model2= RandomForestRegressor(random_state=random_state)
+model3 = GradientBoostingRegressor(random_state=random_state)
+model4 = XGBRegressor(random_state=random_state)
+#모델 전체 실행
+models =[model1,model2,model3,model4]
+
+for model in models:
+    model.fit(x_train,y_train)
+    print('================',model.__class__.__name__,'========')
+    #4.평가,예측
+    score = model1.score(x_test,y_test)
+    print('r2:', score)
+    print(model.feature_importances_)
+
+
+# ================ DecisionTreeClassifier ========
+# acc: 0.9666666666666667
+# [0.0075   0.01875  0.588772 0.384978] (150, 4) (150,) 피처에 대한 중요도 나옴
+# ================ RandomForestClassifier ========
+# acc: 0.9666666666666667
+# [0.12180241 0.03897144 0.45046012 0.38876603]
+# ================ GradientBoostingClassifier ========
+# acc: 0.9666666666666667
+# [0.00374113 0.01546393 0.29725693 0.68353801]
+# ================ XGBClassifier ========
+# acc: 0.9666666666666667
+# [0.02116161 0.02738614 0.6533406  0.29811168]
