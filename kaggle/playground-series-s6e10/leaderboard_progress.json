@@ -1,0 +1,18 @@
+{
+  "competition": "playground-series-s6e10",
+  "target_metric": "Kaggle leaderboard ROC-AUC",
+  "target_score": 0.963,
+  "latest_user_reported_score": 0.96068,
+  "reported_on": "2026-10-28",
+  "reported_submission_file": null,
+  "submission_file_confirmed": false,
+  "goal_reached_on_reported_submission": false,
+  "pending_candidate": {
+    "file": "outputs/leaderboard_cv_20261028/submission_cv.csv",
+    "sha256": "eac1fe13bc46e8ae398a944caa265433fab00d37b3e6d2fb91c26d156311fc21",
+    "oof_auc": 0.9612713852974429,
+    "leaderboard_score": null,
+    "goal_reached": null
+  },
+  "note": "사용자가 제공한 최근 리더보드 점수입니다. 해당 제출 파일명과 public/private 구분은 확인되지 않았습니다. 로컬 검증 점수와 구분합니다."
+}

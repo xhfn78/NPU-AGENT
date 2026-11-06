@@ -17,3 +17,9 @@ _data/kaggle_cat_dog_npy/
 .env
 __pycache__/
 *.py[cod]
+
+# Kaggle local environments and generated training artifacts
+/kaggle/playground-series-s6e10/.tfm_venv/
+/kaggle/playground-series-s6e10/.local_packages/
+/kaggle/playground-series-s6e10/outputs/
+/kaggle/playground-series-s6e10/data/tabicl_model/*.ckpt

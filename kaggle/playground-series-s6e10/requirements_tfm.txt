@@ -1,0 +1,9 @@
+# GPU Torch 2.8.0+cu128은 PyTorch 공식 인덱스에서 별도 설치합니다.
+tabicl==2.2.0
+transformers==4.57.1
+filelock>=3
+typing-extensions>=4.10
+sympy==1.14.0
+networkx>=3
+jinja2>=3
+fsspec>=2025
