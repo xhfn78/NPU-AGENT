@@ -23,3 +23,6 @@ __pycache__/
 /kaggle/playground-series-s6e10/.local_packages/
 /kaggle/playground-series-s6e10/outputs/
 /kaggle/playground-series-s6e10/data/tabicl_model/*.ckpt
+
+# CatBoost training logs
+catboost_info/
